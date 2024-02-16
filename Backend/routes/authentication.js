@@ -45,7 +45,7 @@ authentication.post("/signup", async (req, res) => {
                     res.send("pass updated");
                 }
                 else {
-                    //new user singup
+                    //new user singup!
                     let data = new user({ email: userEmail, password: hashPassword });
                     await data.save();
                     res.send("account created");
