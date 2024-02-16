@@ -159,7 +159,7 @@ export default function Login(props) {
               <Logo font_size="2rem" style={{width:"fit-content",margin_top:"-3vh"}} />
             </div>
             <Whitetext
-              text="Login/Signup"
+              text="Login/Signup form"
               colour="white"
               textsize="2rem"
               textweight="600"
