@@ -3,9 +3,11 @@
 body {
   margin: 0;
   padding: 0;
+  padding-top: 60px;
   font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #161616 !important;
 }
 
 code {

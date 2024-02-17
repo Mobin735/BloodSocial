@@ -133,7 +133,7 @@ export default function Login(props) {
 
   return (
     <>
-      <div className="container">
+      <div className="login-container">
         <div className="rightHalf">
           <img className="loginIcon" src={login_icon} alt="login_icon" />
           <Logo font_size="2rem" />
