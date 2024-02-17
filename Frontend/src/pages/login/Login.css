@@ -112,6 +112,13 @@ input:-webkit-autofill:active {
     align-items: center;
     margin-top: -3vh;
     margin-bottom: 5vh;
+
+    div {
+      margin-top: -2.5rem !important;
+      p {
+        font-size: 2.2rem !important;
+      }
+    }
   }
 
   .rightHalf {
