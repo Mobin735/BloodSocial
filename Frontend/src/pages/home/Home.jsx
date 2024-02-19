@@ -1,3 +1,4 @@
+import Footer from "../../components/medium/Footer/Footer";
 import Navbar from "../../components/medium/Navbar/Navbar";
 import Searchbar from "../../components/medium/Searchbar/Searchbar";
 import Button from "../../components/small/Button";
@@ -56,10 +57,8 @@ export default function Home() {
                     </div>
                     <Button text='Sign up' text_size='1.55vw' bg_color='black' />
                 </div>
-                <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea doloribus distinctio consectetur ex ullam veritatis eaque magni quaerat labore id rerum accusantium amet, laborum, reprehenderit illo harum alias architecto velit?</h1>
-                <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea doloribus distinctio consectetur ex ullam veritatis eaque magni quaerat labore id rerum accusantium amet, laborum, reprehenderit illo harum alias architecto velit?</h1>
-                <h1>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea doloribus distinctio consectetur ex ullam veritatis eaque magni quaerat labore id rerum accusantium amet, laborum, reprehenderit illo harum alias architecto velit?</h1>
             </div>
+            <Footer />
         </>
     )
 };

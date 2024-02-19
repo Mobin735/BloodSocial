@@ -155,6 +155,9 @@ h1 {
 
     .hero-section {
         height: 35vh;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.40)), url('../../assets/hero-section.jpg');
+        background-size: cover;
+        background-position: center;
     }
 
     .big-hero-text {
