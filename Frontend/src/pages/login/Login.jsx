@@ -2,22 +2,31 @@ import login_icon from "../../assets/login_icon.png";
 import Whitetext from "../../components/small/Whitetext";
 import Logo from "../../components/small/Logo";
 import "./Login.css";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { UserContext } from "../../context/user/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Login(props) {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [otp, setOtp] = useState();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [otp, setOtp] = useState('');
   const [submitText, setSubmitText] = useState("Login");
   const [forgetPasswordForm, setForgetPasswordForm] = useState(false);
+  const navigate = useNavigate();
+
+  const { user, setUser } = useContext(UserContext);
 
   async function userExist() {
-    let userFind = await axios.post(`http://localhost:5000/user/login`, {
-      userEmail: email,
-      userPassword: password,
-    });
-    return userFind;
+    try {
+      const isUservalid = await axios.post(`http://localhost:5000/user/login`, {
+        userEmail: email,
+        userPassword: password,
+      });
+      return isUservalid;
+    } catch (error) {
+      return "server error";
+    }
   }
 
   async function submitfunction(e) {
@@ -33,9 +42,20 @@ export default function Login(props) {
         //login part from here
         const userFind = await userExist();
 
+        if (userFind === 'server error') {
+          return;
+        }
+
         if (userFind.data) {
-          if (userFind.data === "success") {
+          if (userFind.data.message === "success") {
             alert("logged In");
+            const token = userFind.data.token;
+            const expDate = new Date("2025-05-30T12:24:51.218Z");
+            const formattedExpDate = expDate.toUTCString();
+
+            document.cookie = `access_token=Bearer ${token}; path=/; expires=${formattedExpDate}; secure; samesite=strict`;
+
+            navigate('/');
             return;
           } else if (userFind.data === "incorrect") {
             alert("Incorrect Password!");
@@ -114,6 +134,9 @@ export default function Login(props) {
     } else {
       const isUserExist = await userExist(); //checking this email exist in DB or not!
 
+      if (isUserExist === 'server error') {
+        return;
+      }
       if (isUserExist.data) {
         setForgetPasswordForm(true);
         setSubmitText("Submit");
@@ -156,7 +179,7 @@ export default function Login(props) {
           <div className="leftContainer">
             <div className="mobileUi">
               <img className="loginIcon" src={login_icon} alt="login_icon" />
-              <Logo font_size="2rem" style={{width:"fit-content",margin_top:"-3vh"}} />
+              <Logo font_size="2rem" style={{ width: "fit-content", margin_top: "-3vh" }} />
             </div>
             <Whitetext
               text="Login/Signup"
@@ -233,7 +256,7 @@ export default function Login(props) {
             <div
               id="forgetPassword"
               onClick={forgetPassword}
-              style={{ width: "100%" }}
+              style={{ width: "100%", cursor: "pointer" }}
             >
               <Whitetext
                 text="Forgot your password?"

@@ -1,23 +1,28 @@
 import React from "react";
-// import styled from "styled-components";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/home/Home"
 import Login from "./pages/login/Login";
-
-// const Title = styled.h1`
-//   color: rebeccapurple;
-// `
+import Profile from "./pages/profile/Profile";
+import UserContextWrapper from "./context/user/UserContext";
+import Privateroutes from "./privateroutes/Privateroutes";
 
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}/>
-          <Route path="/login" element={<Login />}/>
-          <Route path="/*" element={<h1>404 Page not found!</h1>} />
-        </Routes>
-      </BrowserRouter>
+      <UserContextWrapper>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />}/>
+            <Route path="/login" element={<Login />}/>
+            <Route path="/profile" element={
+              <Privateroutes>
+                <Profile />
+              </Privateroutes>
+            }/>
+            <Route path="/*" element={<h1>404 Page not found!</h1>} />
+          </Routes>
+        </BrowserRouter>
+      </UserContextWrapper>
     </>
   );
 }

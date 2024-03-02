@@ -2,8 +2,9 @@ import { NavLink } from "react-router-dom";
 import Logo from "../../small/Logo";
 import Whitetext from "../../small/Whitetext";
 import './Footer.css';
+import { useMemo } from "react";
 
-export default function Footer(params) {
+function FooterFunction() {
     return (
         <>
             <div className="footer-container">
@@ -19,9 +20,16 @@ export default function Footer(params) {
                     <NavLink to="/login" className="nav-link">Home</NavLink>
                     <NavLink to="/login" className="nav-link">Find Nearby</NavLink>
                     <NavLink to="/login" className="nav-link">Request</NavLink>
+                    <NavLink to="/profile" className="nav-link">Profile</NavLink>
                 </div>
             </div>
 
         </>
     )
 };
+
+const Footer = () => {
+    return useMemo(() => <FooterFunction />, []);
+};
+
+export default Footer;

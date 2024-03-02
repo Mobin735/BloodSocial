@@ -30,7 +30,6 @@ const SubContainer = styled.div`
   }
 `;
 const ImgContainer = styled.div`
-  background-image: url(${(props) => props.img});
   background-size: cover;
   background-position: center;
   border-radius: 20px;
@@ -64,7 +63,7 @@ export default function Info({ class_name, imgpath, title_text, des_text }) {
             textweight="300"
             class_name="info-des"
           />
-          <ImgContainer img={imgpath} />
+          <ImgContainer style={{backgroundImage: `url(${imgpath})`  }} />
         </SubContainer>
       </InfoContainer>
     </>

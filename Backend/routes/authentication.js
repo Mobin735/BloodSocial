@@ -3,24 +3,32 @@ import bcrypt from "bcrypt";
 import user from "../models/user.js";
 import nodemailer from "nodemailer";
 import otpVerification from "../models/otpVerification.js";
+import { CreateJWT } from "../utils/JwtToken.js";
 
 const authentication = express.Router();
 
 authentication.post("/login", async (req, res) => {
     let { userEmail, userPassword } = req.body;
     let result = await user.find({ email: userEmail });
+
     if (result.length === 0) {
         res.send(false);
         return;
     } else if (userPassword?.trim() === "" || userPassword === undefined) {
-        res.send("user found");
+        res.send("incorrect");
         return;
     } else {
         const passwordMatch = await bcrypt.compare(
             userPassword,
             result[0].password
         );
-        passwordMatch ? res.send("success") : res.send("incorrect");
+        if (passwordMatch) {
+            const token = CreateJWT(result[0]);
+            res.status(200).json({message:'success',token});
+        }
+        else {
+            res.send("incorrect");
+        }
         return;
     }
 });
@@ -77,7 +85,7 @@ async function timeCheck(expirationTime, email) {
 
 async function sentOtp(email, newOTP) {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const expirationTime = new Date(Date.now() + 5 * 60 * 1000);
+    const expirationTime = new Date(Date.now() + 15 * 60 * 1000);
 
     if (newOTP) {
         await otpVerification.updateOne({ email: email }, { otp, expirationTime });
@@ -106,7 +114,7 @@ async function sentOtp(email, newOTP) {
         from: process.env.USER_EMAIL,
         to: email,
         subject: "OTP Verification",
-        text: `Your OTP is: ${otp}, This OTP is only valid for 5 minutes`,
+        text: `Your OTP is: ${otp}, This OTP is only valid for 15 minutes`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {

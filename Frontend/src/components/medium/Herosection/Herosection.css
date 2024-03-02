@@ -1,0 +1,28 @@
+.general-section {
+    /* background-image: url('../../assets/hero-section.jpg'); */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.15)), url('../../../assets/hero-section.jpg');
+
+    height: 17rem;
+    border-radius: 25px;
+    border-top-right-radius: 0px;
+    border-top-left-radius: 0px;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 786px) {
+    .general-section {
+        height: 25vh;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.40)), url('../../../assets/hero-section.jpg');
+        background-size: cover;
+        background-position: center;
+    }
+
+    .big-hero-text {
+        font-size: 7vw !important;
+    }
+}

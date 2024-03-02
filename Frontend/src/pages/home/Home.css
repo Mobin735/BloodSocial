@@ -1,6 +1,6 @@
-.Home-container {
+/* .Home-container {
     padding: 0px 64px;
-}
+} */
 
 .hero-section {
     /* background-image: url('../../assets/hero-section.jpg'); */
@@ -149,10 +149,6 @@ h1 {
 }
 
 @media (max-width: 786px) {
-    .Home-container {
-        padding: 0px 15px;
-    }
-
     .hero-section {
         height: 35vh;
         background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.40)), url('../../assets/hero-section.jpg');

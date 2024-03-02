@@ -14,3 +14,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.Web-container {
+  padding: 0px 64px;
+}
+
+@media (max-width: 786px) {
+  .Web-container {
+      padding: 0px 15px;
+  }
+}

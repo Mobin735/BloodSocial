@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Whitetext from "../../small/Whitetext";
 import "./Searchbar.css";
 
@@ -13,7 +12,7 @@ export default function Searchbar({searchbar_id}) {
             textsize="1.25rem"
             textweight="400"
           />
-          <select className="select-btn">
+          <select name="blood-type" className="select-btn">
             <option value="">Select your blood type</option>
             <option value="A+">A+</option>
             <option value="A-">A-</option>
@@ -32,7 +31,7 @@ export default function Searchbar({searchbar_id}) {
             textsize="1.25rem"
             textweight="400"
           />
-          <select className="select-btn">
+          <select name="state" className="select-btn">
             <option value="">Select State</option>
             <option value="gujarat">Gujarat</option>
           </select>
@@ -44,7 +43,7 @@ export default function Searchbar({searchbar_id}) {
             textsize="1.25rem"
             textweight="400"
           />
-          <select className="select-btn">
+          <select name="city" className="select-btn">
             <option value="">Select City</option>
             <option value="ahmedabar">Ahmedabad</option>
             <option value="surat">Surat</option>
@@ -58,7 +57,7 @@ export default function Searchbar({searchbar_id}) {
             textsize="1.25rem"
             textweight="400"
           />
-          <select className="select-btn">
+          <select name="donar-type" className="select-btn">
             <option value="">Select Type</option>
             <option value="Donors">Donors</option>
             <option value="Bloodblank">Bloodblank</option>
