@@ -22,7 +22,6 @@ const VerifyUser = async () => {
                 withCredentials: true,
                 mode: 'cors',
             });
-            console.log("bakchodi: "+response.data.message);
             if (response.data.message === 'invalid token' && response.data.message === 'token not found') {
                 const cookie_name = "access_token";
                 document.cookie = cookie_name + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
