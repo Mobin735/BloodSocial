@@ -15,13 +15,13 @@ import UpdateUserData from "./routes/UpdateUserData.js";
 //   credentials: true,
 // };
 
+dotenv.config();
+const app = express();
+
 app.use(cors({
   origin: 'https://blood-social.vercel.app', // Replace with your actual origin
   credentials: true,
 }));
-
-dotenv.config();
-const app = express();
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', 'https://blood-social.vercel.app');
