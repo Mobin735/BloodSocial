@@ -18,6 +18,7 @@ export function CreateJWT(data) {
 
 export function VerifyJWT(req, res, next) {
     const authHeader = req.headers.cookie;
+    console.log("AuthHeader: "+authHeader);
     if (typeof authHeader !== 'undefined') {
         const cookies = authHeader.split("; ");
         const accessTokenCookie = cookies.find(cookie => cookie.startsWith('access_token='));
