@@ -10,15 +10,28 @@ import verifyuser from "./routes/verifyuser.js";
 import otpVerification from "./models/otpVerification.js";
 import UpdateUserData from "./routes/UpdateUserData.js";
 
-dotenv.config();
-const app = express();
+// const corsOptions = {
+//   origin: 'http://localhost:3000', // Replace with the actual origin of your React app
+//   credentials: true,
+// };
 
 app.use(cors({
   origin: 'https://blood-social.vercel.app', // Replace with your actual origin
   credentials: true,
 }));
 
+dotenv.config();
+const app = express();
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://blood-social.vercel.app');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
+
 app.use(express.json());
+// app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_KEY,
