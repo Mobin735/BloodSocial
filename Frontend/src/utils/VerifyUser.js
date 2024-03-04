@@ -19,6 +19,7 @@ const VerifyUser = async () => {
             // sending token to server via cookie to verify 
             const response = await axios.get(`${process.env.REACT_APP_API}/auth/verify`, {
                 withCredentials: true,
+                mode: 'cors',
             });
             // console.log("bakchodi: "+response.data.message);
             if (response.data.message === 'invalid token' && response.data.message === 'token not found') {

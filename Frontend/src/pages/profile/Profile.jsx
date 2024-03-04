@@ -60,7 +60,8 @@ export default function Profile() {
                     state: State,
                     city: City
                 }, {
-                    withCredentials: true
+                    withCredentials: true,
+                    mode: 'cors',
                 })
 
                 if (isUpdate.data.message === 'updated') {

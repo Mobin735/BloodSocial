@@ -21,6 +21,7 @@ export default function Login() {
         userPassword: password,
       }, {
         withCredentials: true,
+        mode: 'cors',
       });
       return isUservalid;
     } catch (error) {
@@ -74,6 +75,7 @@ export default function Login() {
             forgetPass: false,
           }, {
             withCredentials: true,
+            mode: 'cors',
           });
           if (result.data === "otp sent") {
             alert("OTP has sent to your mail");
@@ -113,6 +115,7 @@ export default function Login() {
       forgetPass: "password update",
     }, {
       withCredentials: true,
+      mode: 'cors',
     });
 
     if (result.data === "otp sent") {
@@ -154,6 +157,7 @@ export default function Login() {
             userEmail: email,
           }, {
             withCredentials: true,
+            mode: 'cors',
           });
           alert("OTP has sent to your mail!");
         } catch (error) {
