@@ -16,28 +16,6 @@ export function CreateJWT(data) {
     return token;
 };
 
-
-// export function VerifyJWT(req,res,next) {
-//     const authHeader = req.headers.cookie;
-    
-//     if (typeof authHeader !== 'undefined') {
-//         const bearer = authHeader.split(" ");
-//         const token = bearer[1];
-//         try {
-//             const userData = jwt.verify(token,JWTSignature);
-//             req.data = userData;
-//             next();
-//         } catch (error) {
-//             // console.log("here");
-//             res.json({message:"invalid token"});
-//         }
-//     }
-//     else {
-//         res.json({message:"invalid token"});
-//     }
-//     return;
-// }
-
 export function VerifyJWT(req, res, next) {
     const authHeader = req.headers.cookie;
 
@@ -58,6 +36,7 @@ export function VerifyJWT(req, res, next) {
             res.json({ message: "token not found" });
         }
     } else {
+        console.log("whyyyyyyy");
         res.json({ message: "invalid token" });
     }
     return;
