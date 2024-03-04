@@ -51,6 +51,8 @@ app.use("/user", authentication);
 app.use("/userdata", UpdateUserData);
 app.use("/auth", verifyuser)
 
+app.get("/", (req, res) => res.send("Express on Vercel"));
+
 cron.schedule(
   "*/15 * * * *",
   async () => {
