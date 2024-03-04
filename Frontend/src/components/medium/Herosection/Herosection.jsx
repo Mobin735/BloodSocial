@@ -18,7 +18,7 @@ function HerosectionFuction({text}) {
 };
 
 const Herosection = ({ text }) => {
-    return useMemo(() => <HerosectionFuction text={text} />, []);
+    return useMemo(() => <HerosectionFuction text={text} />, [text]);
 };
 
 export default Herosection;

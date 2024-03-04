@@ -2,12 +2,11 @@ import login_icon from "../../assets/login_icon.png";
 import Whitetext from "../../components/small/Whitetext";
 import Logo from "../../components/small/Logo";
 import "./Login.css";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { UserContext } from "../../context/user/UserContext";
 import { useNavigate } from "react-router-dom";
 
-export default function Login(props) {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [otp, setOtp] = useState('');
@@ -15,13 +14,13 @@ export default function Login(props) {
   const [forgetPasswordForm, setForgetPasswordForm] = useState(false);
   const navigate = useNavigate();
 
-  const { user, setUser } = useContext(UserContext);
-
   async function userExist() {
     try {
-      const isUservalid = await axios.post(`http://localhost:5000/user/login`, {
+      const isUservalid = await axios.post(`${process.env.REACT_APP_API}/user/login`, {
         userEmail: email,
         userPassword: password,
+      }, {
+        withCredentials: true,
       });
       return isUservalid;
     } catch (error) {
@@ -53,7 +52,7 @@ export default function Login(props) {
             const expDate = new Date("2025-05-30T12:24:51.218Z");
             const formattedExpDate = expDate.toUTCString();
 
-            document.cookie = `access_token=Bearer ${token}; path=/; expires=${formattedExpDate}; secure; samesite=strict`;
+            document.cookie = `access_token=Bearer ${token}; path=/; expires=${formattedExpDate}; secure; samesite=strict HttpOnly`;
 
             navigate('/');
             return;
@@ -68,11 +67,13 @@ export default function Login(props) {
           document.getElementById("forgetPassword").style.display = "none";
           document.getElementById("email").disabled = true;
 
-          let result = await axios.post(`http://localhost:5000/user/signup`, {
+          let result = await axios.post(`${process.env.REACT_APP_API}/user/signup`, {
             otp: otp,
             userEmail: email,
             userPass: password,
             forgetPass: false,
+          }, {
+            withCredentials: true,
           });
           if (result.data === "otp sent") {
             alert("OTP has sent to your mail");
@@ -83,6 +84,7 @@ export default function Login(props) {
             document.getElementById("email").disabled = false;
             setOtp("");
             alert("Account Created!");
+            document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;';
           } else if (result.data === "wrong otp") {
             alert("Invalid OTP!");
           } else {
@@ -104,11 +106,13 @@ export default function Login(props) {
   }
 
   async function forgetPasswordSubmit() {
-    let result = await axios.post(`http://localhost:5000/user/signup`, {
+    let result = await axios.post(`${process.env.REACT_APP_API}/user/signup`, {
       otp: otp,
       userEmail: email,
       userPass: password,
-      forgetPass: "otp verify",
+      forgetPass: "password update",
+    }, {
+      withCredentials: true,
     });
 
     if (result.data === "otp sent") {
@@ -122,6 +126,7 @@ export default function Login(props) {
       document.getElementById("email").disabled = false;
       setOtp("");
       alert("Password changed!");
+      document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;';
     } else if (result.data === "wrong otp") {
       setOtp("");
       alert("Invalid OTP!");
@@ -131,7 +136,8 @@ export default function Login(props) {
   async function forgetPassword() {
     if (email?.trim() === "" || email === undefined) {
       alert("Enter email for password recovery!");
-    } else {
+    }
+    else {
       const isUserExist = await userExist(); //checking this email exist in DB or not!
 
       if (isUserExist === 'server error') {
@@ -143,11 +149,16 @@ export default function Login(props) {
         document.getElementById("verify").style.display = "flex";
         document.getElementById("forgetPassword").style.display = "none";
         document.getElementById("email").disabled = true;
-        await axios.post(`http://localhost:5000/user/signup`, {
-          userEmail: email,
-          forgetPass: "otp",
-        });
-        alert("OTP has sent to your mail!");
+        try {
+          await axios.post(`${process.env.REACT_APP_API}/user/signup`, {
+            userEmail: email,
+          }, {
+            withCredentials: true,
+          });
+          alert("OTP has sent to your mail!");
+        } catch (error) {
+          alert("Error while sending otp");
+        }
       } else {
         alert("User does not exist!");
       }

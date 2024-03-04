@@ -9,6 +9,7 @@ const authentication = express.Router();
 
 authentication.post("/login", async (req, res) => {
     let { userEmail, userPassword } = req.body;
+
     let result = await user.find({ email: userEmail });
 
     if (result.length === 0) {
@@ -24,7 +25,8 @@ authentication.post("/login", async (req, res) => {
         );
         if (passwordMatch) {
             const token = CreateJWT(result[0]);
-            res.status(200).json({message:'success',token});
+            
+            res.status(200).json({ message: 'success', token });
         }
         else {
             res.send("incorrect");
@@ -33,42 +35,64 @@ authentication.post("/login", async (req, res) => {
     }
 });
 
+authentication.post("/test", async (req, res) => {
+    await otpVerification.deleteMany({ email: "gamesproject09@gmail.com" })
+    // await user.deleteMany({ email: "gamesproject09@gmail.com" })
+    // if (req.session.email) {
+    //     console.log("session found");
+    //     console.log(req.session);
+    //     req.session.destroy();
+    //     console.log(req.session);
+    //     res.cookie("token","helooooooo");
+    // }
+    // else {
+    //     console.log("session not found and created");
+    //     req.session.email = "mobin";
+    // }
+    res.send("hello");
+})
+
 authentication.post("/signup", async (req, res) => {
     let { otp, userEmail, userPass, forgetPass } = req.body;
+    //userFound.length !== 0
+    let isSessionExist = req.session.email ? true : false;
 
-    let userFound = await otpVerification.find({ email: userEmail });
+    if (isSessionExist && userEmail === req.session.email) {
+        let userFound = await otpVerification.find({ email: req.session.email })
 
-    if (userFound.length !== 0) {
-        if (forgetPass === "otp") {
-            sentOtp(userEmail, true);
-            res.send(true);
+        const isOTPExpired = await timeCheck(userFound[0].expirationTime, userEmail);
+        const isValidOTP = userFound[0].otp == otp && !isOTPExpired;
+        
+        if (isValidOTP) {
+            const hashPassword = await bcrypt.hash(userPass, 10);
+            if (forgetPass === 'password update') {
+                await user.updateOne({ email: req.session.email }, { password: hashPassword });
+                res.send("pass updated");
+            }
+            else {
+                //new user singup!
+                let data = new user({ email: userEmail, password: hashPassword });
+                await data.save();
+                res.send("account created");
+            }
+            req.session.destroy();
+            await otpVerification.deleteOne({ email: userEmail });
         }
         else {
-            const isOTPExpired = await timeCheck(userFound[0].expirationTime, userEmail);
-            const verifyOTP = userFound[0].otp == otp && isOTPExpired;
-            if (verifyOTP) {
-                const hashPassword = await bcrypt.hash(userPass, 10);
-                if (forgetPass === 'otp verify') {
-                    await user.updateOne({ email: userEmail }, { password: hashPassword });
-                    res.send("pass updated");
-                }
-                else {
-                    //new user singup!
-                    let data = new user({ email: userEmail, password: hashPassword });
-                    await data.save();
-                    res.send("account created");
-                }
+            req.session.otpCount += 1;
+            if (req.session.otpCount === 5) {
                 await otpVerification.deleteOne({ email: userEmail });
-            } 
-            else {
-                res.send("wrong otp");
+                req.session.destroy();
             }
+            res.send("wrong otp");
         }
+
     }
     else {
-        const newOTP = false;
-        sentOtp(userEmail, newOTP);
-        res.send("otp sent");
+        req.session.email = userEmail;
+        req.session.otpCount = 1;
+        sentOtp(userEmail, false);
+        res.send('otp sent');
     }
     return;
 });
@@ -78,9 +102,9 @@ async function timeCheck(expirationTime, email) {
     if (currentTime > expirationTime) {
         const newOTP = true;
         sentOtp(email, newOTP);
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 
 async function sentOtp(email, newOTP) {

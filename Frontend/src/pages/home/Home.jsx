@@ -1,14 +1,34 @@
+import { useContext, useEffect } from "react";
 import Footer from "../../components/medium/Footer/Footer";
 import Navbar from "../../components/medium/Navbar/Navbar";
 import Searchbar from "../../components/medium/Searchbar/Searchbar";
 import Button from "../../components/small/Button";
 import Info from "../../components/small/Info";
 import Whitetext from "../../components/small/Whitetext";
+import VerifyUser from "../../utils/VerifyUser";
 import './Home.css';
+import { UserContext } from "../../context/user/UserContext";
 
 export default function Home() {
+    const { setUserState } = useContext(UserContext);
+
+    useEffect(() => {
+        const isLogged = async () => {
+            const result = await VerifyUser();
+            if (result) {
+                setUserState((prevstate)=>({
+                    ...prevstate,
+                    isUserLogged: true
+                }))
+            }
+        }
+        isLogged();
+        return ;
+    }, [setUserState]);
+
     return (
         <>
+            {/* {console.log("home")} */}
             <Navbar />
             <div className="Web-container">
                 <div className="hero-section">

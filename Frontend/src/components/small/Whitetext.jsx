@@ -14,7 +14,7 @@ function WhitetextFunction({text,colour,textsize,textweight,margin_top,class_nam
 };
 
 const Whitetext = ({text,colour,textsize,textweight,margin_top,class_name}) => {
-    return useMemo(()=> <WhitetextFunction text={text} colour={colour} textsize={textsize} textweight={textweight} margin_top={margin_top} class_name={class_name} />,[text])
+    return useMemo(()=> <WhitetextFunction text={text} colour={colour} textsize={textsize} textweight={textweight} margin_top={margin_top} class_name={class_name} />,[text,colour,textsize,textweight,margin_top,class_name])
 }
 
 export default Whitetext;

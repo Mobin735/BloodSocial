@@ -2,11 +2,13 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cron from "node-cron";
+import session from "express-session";
 import cookieParser from 'cookie-parser';
 import "./utils/dbConnect.js";
 import authentication from "./routes/authentication.js";
 import verifyuser from "./routes/verifyuser.js";
 import otpVerification from "./models/otpVerification.js";
+import UpdateUserData from "./routes/UpdateUserData.js";
 
 const corsOptions = {
   origin: 'http://localhost:3000', // Replace with the actual origin of your React app
@@ -18,10 +20,20 @@ const app = express();
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(cookieParser());
+app.use(session({
+  secret: process.env.SESSION_KEY,
+  resave: false,
+  saveUninitialized: false,
+  name: 'session',
+  cookie: {
+    maxAge: 900000, // Set the expiration time to 10 seconds (in milliseconds)
+  },
+}));
 
 const port = process.env.PORT;
 
 app.use("/user", authentication);
+app.use("/userdata", UpdateUserData);
 app.use("/auth", verifyuser)
 
 cron.schedule(

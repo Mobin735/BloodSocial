@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import React, { createContext, useState } from "react";
 
 export const UserContext = createContext();
 
@@ -10,7 +10,7 @@ const UserContextWrapper = ({children}) => {
         bloodType: '',
         state: '',
         city: '',
-        isUserLogged: null,
+        isUserLogged: false,
     };
     const [userState, setUserState] = useState(initialState);
     
@@ -21,4 +21,4 @@ const UserContextWrapper = ({children}) => {
     )
 }
 
-export default UserContextWrapper;
+export default React.memo(UserContextWrapper);

@@ -5,6 +5,7 @@ import Whitetext from "../../components/small/Whitetext";
 import { useContext, useState } from "react";
 import './Profile.css';
 import { UserContext } from "../../context/user/UserContext";
+import axios from "axios";
 
 const citiesData = {
     Gujarat: ["Surat", "Ahmedabad", "Patan"],
@@ -12,7 +13,7 @@ const citiesData = {
 }
 
 export default function Profile() {
-    const {email,fullname,mobile,bloodType,state,city} = useContext(UserContext);
+    const { email, fullname, mobile, bloodType, state, city } = useContext(UserContext);
 
     const [buttonState, setButtonState] = useState(true);
     const [FullName, setFullName] = useState(fullname);
@@ -21,7 +22,6 @@ export default function Profile() {
     const [BloodType, setBloodType] = useState(bloodType);
     const [Mobile, setMobile] = useState(mobile);
     const [cities, setCities] = useState([]);
-
 
     const stateChange = (selectedState) => {
         setState(selectedState);
@@ -38,14 +38,46 @@ export default function Profile() {
         setCity('');
     }
 
-    const verifyUserDetails = () => {
+    const DataVerify = () => {
+        setFullName(FullName.trim());
+        return (
+            FullName.trim() !== fullname ||
+            Mobile !== mobile ||
+            BloodType !== bloodType ||
+            State !== state ||
+            City !== city
+        );
+    };
+
+    const verifyUserDetails = async () => {
+        const isDataChanged = DataVerify();
+        if (isDataChanged) {
+            try {
+                const isUpdate = await axios.post(`${process.env.REACT_APP_API}/userdata/update`, {
+                    fullname: FullName,
+                    mobile: Mobile,
+                    bloodtype: BloodType,
+                    state: State,
+                    city: City
+                }, {
+                    withCredentials: true
+                })
+
+                if (isUpdate.data.message === 'updated') {
+                    alert("Data updated!");
+                }
+                else {
+                    console.log("problem while updating data");
+                }
+            } catch (error) {
+                console.log("error while sending data update req to server");
+            }
+        }
         setButtonState(true);
-        // if (fullName != '' && fullName.trim() != '') {
-        // }
     }
     // const navigate = useNavigate();
 
-    
+
     return (
         <>
             {/* {console.log("profile")} */}
@@ -109,7 +141,7 @@ export default function Profile() {
                                     class_name="subcontainer-input-text" />) :
                                 (
 
-                                    <input name="mobilenumber" placeholder="Enter Mobile Number" type="number" onInput={(e) => e.target.value = e.target.value.slice(0, 10)} value={mobile} onChange={(e) => setMobile(e.target.value)}/>
+                                    <input name="mobilenumber" placeholder="Enter Mobile Number" type="number" onInput={(e) => e.target.value = e.target.value.slice(0, 10)} value={Mobile} onChange={(e) => setMobile(e.target.value.trim())} />
                                 )
                         }
                     </div>
@@ -128,7 +160,7 @@ export default function Profile() {
                                         textweight='200'
                                         class_name="subcontainer-input-text" />) :
                                 (
-                                    <select name="bloodtype" className="select-btn" value={bloodType} onChange={(e) => {setBloodType(e.target.value)}}>
+                                    <select name="bloodtype" className="select-btn" value={BloodType} onChange={(e) => { setBloodType(e.target.value) }}>
                                         <option value="">Select your blood type</option>
                                         <option value="A+">A+</option>
                                         <option value="A-">A-</option>
@@ -180,7 +212,7 @@ export default function Profile() {
                                         textweight='200'
                                         class_name="subcontainer-input-text" />) :
                                 (
-                                    <select name="city" className="select-btn" value={city} onChange={(e) => { setCity(e.target.value) }}>
+                                    <select name="city" className="select-btn" value={City} onChange={(e) => { setCity(e.target.value) }}>
                                         <option value=''>Select your city</option>
                                         {cities.length > 0 &&
                                             cities.map(city => (
