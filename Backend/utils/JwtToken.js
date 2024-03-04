@@ -18,7 +18,6 @@ export function CreateJWT(data) {
 
 export function VerifyJWT(req, res, next) {
     const authHeader = req.headers.cookie;
-    console.log("AuthHeader: "+authHeader);
     if (typeof authHeader !== 'undefined') {
         const cookies = authHeader.split("; ");
         const accessTokenCookie = cookies.find(cookie => cookie.startsWith('access_token='));
@@ -36,7 +35,6 @@ export function VerifyJWT(req, res, next) {
             res.json({ message: "token not found" });
         }
     } else {
-        console.log("whyyyyyyy");
         res.json({ message: "invalid token" });
     }
     return;
