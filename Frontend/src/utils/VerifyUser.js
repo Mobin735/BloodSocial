@@ -18,7 +18,7 @@ const VerifyUser = async () => {
         console.log("Sending req to server");
         try {
             // sending token to server via cookie to verify 
-            const response = await axios.get(`${process.env.REACT_APP_API}/auth/verify`, {
+            const response = await axios.get(`${process.env.REACT_APP_API}/auth/verify`,null,{
                 withCredentials: true,
                 mode: 'cors',
             });
