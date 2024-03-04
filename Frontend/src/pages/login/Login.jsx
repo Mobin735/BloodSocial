@@ -53,7 +53,7 @@ export default function Login() {
             const expDate = new Date("2025-05-30T12:24:51.218Z");
             const formattedExpDate = expDate.toUTCString();
 
-            document.cookie = `access_token=Bearer ${token}; path=/; expires=${formattedExpDate}; secure; samesite=strict HttpOnly`;
+            document.cookie = `access_token=Bearer ${token}; path=/; expires=${formattedExpDate}; secure; samesite=None`;
 
             navigate('/');
             return;
