@@ -60,7 +60,7 @@ authentication.post("/signup", async (req, res) => {
     if (isSessionExist && userEmail === req.session.email) {
         let userFound = await otpVerification.find({ email: req.session.email })
 
-        if (userFound) {
+        if (userFound.length !== 0) {
             const isOTPExpired = await timeCheck(userFound[0].expirationTime, userEmail);
             const isValidOTP = userFound[0].otp == otp && !isOTPExpired;
             
