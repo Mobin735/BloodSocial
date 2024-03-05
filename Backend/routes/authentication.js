@@ -91,8 +91,12 @@ authentication.post("/signup", async (req, res) => {
             }
         }
         else {
-            req.session.destroy();
-            res.send("wrong otp");
+            try {
+                sentOtp(userEmail, false);
+            } catch (error) {
+                console.log("node mailer error: "+error);
+            }
+            res.send('otp sent');
         }
     }
     else {
