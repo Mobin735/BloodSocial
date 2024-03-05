@@ -1,29 +1,20 @@
 import axios from "axios";
+import GetCookie from "./GetCookie";
 
-function getCookie() {
-    const cookies = document.cookie;
-    const cookieName = 'access_token'; 
-    const cookieArray = cookies.split('; ');
-    const isCookieFound = cookieArray.find(cookie => cookie.trim().startsWith(`${cookieName}=`));
 
-    if (isCookieFound) {
-        return isCookieFound;
-    }
-    return false;
-}
 
 const VerifyUser = async () => {
-    const isCookieExist = getCookie();
+    const isCookieExist = GetCookie();
     if (isCookieExist) {
         console.log("Sending req to server");
         try {
             // sending token to server via cookie to verify 
             const response = await axios.get(`${process.env.REACT_APP_API}/auth/verify`,{
-                // headers: {
-                //     token: isCookieExist,
-                // },
-                withCredentials: true,
-                mode: 'cors',
+                headers: {
+                    token: isCookieExist,
+                },
+                // withCredentials: true,
+                // mode: 'cors',
             });
             if (response.data.message === 'invalid token' && response.data.message === 'token not found') {
                 const cookie_name = "access_token";

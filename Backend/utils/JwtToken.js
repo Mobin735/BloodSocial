@@ -17,7 +17,7 @@ export function CreateJWT(data) {
 };
 
 export function VerifyJWT(req, res, next) {
-    const authHeader = req.headers.cookie;
+    const authHeader = req.headers.token;
     console.log("AuthHeader binod: " + authHeader);
     try {
         if (typeof authHeader !== 'undefined') {

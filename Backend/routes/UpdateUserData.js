@@ -26,12 +26,7 @@ UpdateUserData.post("/update", VerifyJWT, async (req, res) => {
             city
         }
         const token = CreateJWT(userData);
-        const expDate = new Date("2025-05-30T12:24:51.218Z");
-        const formattedExpDate = expDate.toUTCString();
-
-        // Set the cookie in the response header
-        res.setHeader('Set-Cookie', [`access_token=Bearer ${token}; Path=/; Expires=${formattedExpDate}; Secure; SameSite=none;`]);
-        res.status(200).json({ message: "updated" });
+        res.status(200).json({ message: "updated", token });
     } catch (error) {
         res.json({ message: "error while updating data to DB!" });
     }

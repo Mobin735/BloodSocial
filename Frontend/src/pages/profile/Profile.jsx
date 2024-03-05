@@ -6,6 +6,7 @@ import { useContext, useState } from "react";
 import './Profile.css';
 import { UserContext } from "../../context/user/UserContext";
 import axios from "axios";
+import GetCookie from "../../utils/GetCookie";
 
 const citiesData = {
     Gujarat: ["Surat", "Ahmedabad", "Patan"],
@@ -51,7 +52,8 @@ export default function Profile() {
 
     const verifyUserDetails = async () => {
         const isDataChanged = DataVerify();
-        if (isDataChanged) {
+        const isCookieExist = GetCookie();
+        if (isDataChanged && isCookieExist) {
             try {
                 const isUpdate = await axios.post(`${process.env.REACT_APP_API}/userdata/update`, {
                     fullname: FullName,
@@ -60,11 +62,19 @@ export default function Profile() {
                     state: State,
                     city: City
                 }, {
-                    withCredentials: true,
-                    mode: 'cors',
+                    headers: {
+                        token: isCookieExist
+                    },
+                    // withCredentials: true,
+                    // mode: 'cors',
                 })
 
                 if (isUpdate.data.message === 'updated') {
+                    const token = isUpdate.data.token;
+                    const expDate = new Date("2025-05-30T12:24:51.218Z");
+                    const formattedExpDate = expDate.toUTCString();
+
+                    document.cookie = `access_token=Bearer ${token}; path=/; expires=${formattedExpDate}; secure; samesite=None`;
                     alert("Data updated!");
                 }
                 else {
