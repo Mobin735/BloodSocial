@@ -124,6 +124,7 @@ async function sentOtp(email, newOTP) {
             user: process.env.USER_EMAIL,
             pass: process.env.USER_PASS,
         },
+        timeout: 10000,
     });
 
     transporter.verify((error, success) => {
