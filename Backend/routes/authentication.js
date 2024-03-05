@@ -62,33 +62,38 @@ authentication.post("/signup", async (req, res) => {
     if (isSessionExist && userEmail === req.session.email) {
         let userFound = await otpVerification.find({ email: req.session.email })
 
-        const isOTPExpired = await timeCheck(userFound[0].expirationTime, userEmail);
-        const isValidOTP = userFound[0].otp == otp && !isOTPExpired;
-        
-        if (isValidOTP) {
-            const hashPassword = await bcrypt.hash(userPass, 10);
-            if (forgetPass === 'password update') {
-                await user.updateOne({ email: req.session.email }, { password: hashPassword });
-                res.send("pass updated");
+        if (userFound) {
+            const isOTPExpired = await timeCheck(userFound[0].expirationTime, userEmail);
+            const isValidOTP = userFound[0].otp == otp && !isOTPExpired;
+            
+            if (isValidOTP) {
+                const hashPassword = await bcrypt.hash(userPass, 10);
+                if (forgetPass === 'password update') {
+                    await user.updateOne({ email: req.session.email }, { password: hashPassword });
+                    res.send("pass updated");
+                }
+                else {
+                    //new user singup!
+                    let data = new user({ email: userEmail, password: hashPassword });
+                    await data.save();
+                    res.send("account created");
+                }
+                req.session.destroy();
+                await otpVerification.deleteOne({ email: userEmail });
             }
             else {
-                //new user singup!
-                let data = new user({ email: userEmail, password: hashPassword });
-                await data.save();
-                res.send("account created");
+                req.session.otpCount += 1;
+                if (req.session.otpCount === 5) {
+                    await otpVerification.deleteOne({ email: userEmail });
+                    req.session.destroy();
+                }
+                res.send("wrong otp");
             }
-            req.session.destroy();
-            await otpVerification.deleteOne({ email: userEmail });
         }
         else {
-            req.session.otpCount += 1;
-            if (req.session.otpCount === 5) {
-                await otpVerification.deleteOne({ email: userEmail });
-                req.session.destroy();
-            }
+            req.session.destroy();
             res.send("wrong otp");
         }
-
     }
     else {
         req.session.email = userEmail;
