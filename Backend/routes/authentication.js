@@ -118,41 +118,36 @@ async function sentOtp(email, newOTP) {
         await data.save();
     }
 
-    try {
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.USER_EMAIL,
-                pass: process.env.USER_PASS,
-            },
-        });
-    
-        transporter.verify((error, success) => {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log(success + "Ready to sent messages!");
-            }
-        });
-    
-        const mailOptions = {
-            from: process.env.USER_EMAIL,
-            to: email,
-            subject: "OTP Verification",
-            text: `Your OTP is: ${otp}, This OTP is only valid for 15 minutes`,
-        };
-    
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error("Error sending OTP:", error);
-            } else {
-                console.log("Email sent:", info.response);
-            }
-        });
-    } catch (error) {
-        console.log("lolll: "+error);
-    }
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.USER_EMAIL,
+            pass: process.env.USER_PASS,
+        },
+    });
 
+    transporter.verify((error, success) => {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(success + "Ready to sent messages!");
+        }
+    });
+
+    const mailOptions = {
+        from: process.env.USER_EMAIL,
+        to: email,
+        subject: "OTP Verification",
+        text: `Your OTP is: ${otp}, This OTP is only valid for 15 minutes`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error("Error sending OTP:", error);
+        } else {
+            console.log("Email sent:", info.response);
+        }
+    });
     // console.log(email+" "+otp);
     return;
 }
