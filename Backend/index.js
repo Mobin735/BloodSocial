@@ -14,6 +14,7 @@ const allowedOrigins = ['http://localhost:3000', 'https://blood-social.vercel.ap
 
 const corsOptions = {
   origin: allowedOrigins, // Replace with the actual origin of your React app
+  credentials: true,
 };
 
 dotenv.config();
