@@ -37,7 +37,6 @@ export function VerifyJWT(req, res, next) {
                 res.json({ message: "token not found" });
             }
         } else {
-            console.log("hereee");
             res.status(402).json({ message: "invalid token" });
         }
     } catch (error) {
