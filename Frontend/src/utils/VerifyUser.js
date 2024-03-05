@@ -21,7 +21,9 @@ const VerifyUser = async () => {
             const response = await axios.get(`${process.env.REACT_APP_API}/auth/verify`,{
                 headers: {
                     token: isCookieExist,
-                }
+                },
+                // withCredentials: true,
+                // mode: 'cors',
             });
             if (response.data.message === 'invalid token' && response.data.message === 'token not found') {
                 const cookie_name = "access_token";
