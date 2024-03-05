@@ -91,6 +91,7 @@ authentication.post("/signup", async (req, res) => {
         else {
             try {
                 sentOtp(userEmail, false);
+                req.session.otpCount = 1;
             } catch (error) {
                 console.log("node mailer error: "+error);
             }
