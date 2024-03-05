@@ -90,7 +90,7 @@ authentication.post("/signup", async (req, res) => {
         }
         else {
             try {
-                sentOtp(userEmail, false);
+                sentOtp(req.session.email);
                 req.session.otpCount = 1;
             } catch (error) {
                 console.log("node mailer error: "+error);
@@ -102,7 +102,7 @@ authentication.post("/signup", async (req, res) => {
         req.session.email = userEmail;
         req.session.otpCount = 1;
         try {
-            sentOtp(userEmail, false);
+            sentOtp(userEmail);
         } catch (error) {
             console.log("node mailer error: "+error);
         }
@@ -114,20 +114,21 @@ authentication.post("/signup", async (req, res) => {
 async function timeCheck(expirationTime, email) {
     const currentTime = new Date(Date.now());
     if (currentTime > expirationTime) {
-        const newOTP = true;
-        sentOtp(email, newOTP);
+        sentOtp(email);
         return true;
     }
     return false;
 }
 
-async function sentOtp(email, newOTP) {
+async function sentOtp(email) {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const expirationTime = new Date(Date.now() + 15 * 60 * 1000);
 
-    if (newOTP) {
+    let userFound = await otpVerification.find({ email: email });
+    if (userFound.length !== 0) {
         await otpVerification.updateOne({ email: email }, { otp, expirationTime });
-    } else {
+    }
+    else {
         let data = new otpVerification({ email: email, otp, expirationTime });
         await data.save();
     }
