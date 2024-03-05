@@ -10,30 +10,32 @@ import verifyuser from "./routes/verifyuser.js";
 import otpVerification from "./models/otpVerification.js";
 import UpdateUserData from "./routes/UpdateUserData.js";
 
+const allowedOrigins = ['http://localhost:3000', 'https://blood-social.vercel.app'];
+
 // const corsOptions = {
-//   origin: 'http://localhost:3000', // Replace with the actual origin of your React app
+//   origin: allowedOrigins, // Replace with the actual origin of your React app
 //   credentials: true,
 // };
 
 dotenv.config();
 const app = express();
 
-app.use(cors({
-  origin: 'https://blood-social.vercel.app',
-  methods: ["POST","GET"], // Replace with your actual origin
-  credentials: true,
-}));
+// app.use(cors({
+//   origin: 'https://blood-social.vercel.app',
+//   methods: ["POST","GET"], // Replace with your actual origin
+//   credentials: true,
+// }));
 
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', 'https://blood-social.vercel.app');
-//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-//   res.header('Access-Control-Allow-Credentials', 'true');
-//   next();
-// });
+// app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', allowedOrigins);
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
 
 app.use(express.json());
-// app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_KEY,
