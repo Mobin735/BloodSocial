@@ -91,7 +91,11 @@ authentication.post("/signup", async (req, res) => {
     else {
         req.session.email = userEmail;
         req.session.otpCount = 1;
-        sentOtp(userEmail, false);
+        try {
+            sentOtp(userEmail, false);
+        } catch (error) {
+            console.log("node mailer error: "+error);
+        }
         res.send('otp sent');
     }
     return;
@@ -117,7 +121,7 @@ async function sentOtp(email, newOTP) {
         let data = new otpVerification({ email: email, otp, expirationTime });
         await data.save();
     }
-
+    
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
