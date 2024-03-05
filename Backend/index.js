@@ -32,7 +32,7 @@ app.use(session({
   name: 'session',
   cookie: {
     maxAge: 900000, // Set the expiration time to 10 seconds (in milliseconds)
-    // sameSite: 'None',
+    sameSite: 'None',
     // secure: true, 
   },
 }));
