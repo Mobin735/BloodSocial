@@ -31,17 +31,21 @@ export function VerifyJWT(req, res, next) {
                     req.data = userData;
                     next();
                 } catch (error) {
+                    res.setHeader('Cache-Control', 'no-store');
                     res.json({ message: "invalid token" });
-                }
+                }   
             } else {
+                res.setHeader('Cache-Control', 'no-store');
                 res.json({ message: "token not found" });
             }
         } else {
             console.log("hereee");
+            res.setHeader('Cache-Control', 'no-store');
             res.status(402).json({ message: "invalid token" });
         }
     } catch (error) {
         console.log(error);
+        res.setHeader('Cache-Control', 'no-store');
         res.status(400).json({message: "token not found"});
     }
 }
