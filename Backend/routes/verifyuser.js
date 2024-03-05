@@ -1,14 +1,8 @@
 import express from "express";
 import { VerifyJWT } from "../utils/JwtToken.js";
-import cors from "cors";
-
-const allowedOrigins = ['http://localhost:3000', 'https://blood-social.vercel.app'];
 
 const verifyuser = express.Router();
-verifyuser.use(cors({
-    origin: allowedOrigins,
-    credentials: true
-}))
+
 
 verifyuser.get('/verify',VerifyJWT,(req, res) => {
     const userData = {
@@ -19,7 +13,6 @@ verifyuser.get('/verify',VerifyJWT,(req, res) => {
         state: req.data.user.state,
         city: req.data.user.city
     }   
-    res.setHeader('Cache-Control', 'no-store');
     res.status(200).json({user:userData});
     return;
 })
