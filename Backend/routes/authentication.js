@@ -57,6 +57,8 @@ authentication.post("/signup", async (req, res) => {
     //userFound.length !== 0
     let isSessionExist = req.session.email ? true : false;
 
+    console.log("about session: "+req.session.email);
+
     if (isSessionExist && userEmail === req.session.email) {
         let userFound = await otpVerification.find({ email: req.session.email })
 
