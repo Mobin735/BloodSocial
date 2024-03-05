@@ -37,7 +37,6 @@ export function VerifyJWT(req, res, next) {
         }
     } else {
         console.log("hereee");
-        res.status(200).json({ message: "invalid token" });
+        res.status(402).json({ message: "invalid token" });
     }
-    return;
 }
