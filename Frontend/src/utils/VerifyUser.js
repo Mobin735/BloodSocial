@@ -31,6 +31,7 @@ const VerifyUser = async () => {
                 return response.data.user;
             }
         } catch (error) {
+            console.log("error while verifying");
             return false;
         }
     }
