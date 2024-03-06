@@ -131,6 +131,7 @@ export default function Login() {
   }
 
   async function forgetPasswordSubmit() {
+    setMiniLoader(true);
     let result = await axios.post(`${process.env.REACT_APP_API}/user/signup`, {
       otp: otp,
       userEmail: email,
