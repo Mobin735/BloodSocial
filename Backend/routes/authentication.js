@@ -35,28 +35,28 @@ authentication.post("/login", async (req, res) => {
     }
 });
 
-// authentication.post("/test", async (req, res) => {
-//     await otpVerification.deleteMany({ email: "gamesproject09@gmail.com" })
-//     // await user.deleteMany({ email: "gamesproject09@gmail.com" })
-//     // if (req.session.email) {
-//     //     console.log("session found");
-//     //     console.log(req.session);
-//     //     req.session.destroy();
-//     //     console.log(req.session);
-//     //     res.cookie("token","helooooooo");
-//     // }
-//     // else {
-//     //     console.log("session not found and created");
-//     //     req.session.email = "mobin";
-//     // }
-//     res.send("hello");
-// })
+authentication.post("/test", async (req, res) => {
+    await user.deleteMany({ email: "gamesproject09@gmail.com" })
+    // await user.deleteMany({ email: "gamesproject09@gmail.com" })
+    // if (req.session.email) {
+    //     console.log("session found");
+    //     console.log(req.session);
+    //     req.session.destroy();
+    //     console.log(req.session);
+    //     res.cookie("token","helooooooo");
+    // }
+    // else {
+    //     console.log("session not found and created");
+    //     req.session.email = "mobin";
+    // }
+    res.send("hello");
+})
 
 authentication.post("/signup", async (req, res) => {
     let { otp, userEmail, userPass, forgetPass } = req.body;
     //userFound.length !== 0
     let isSessionExist = req.session.email ? true : false;
-
+    console.log(req.session.email);
     if (isSessionExist && userEmail === req.session.email) {
         let userFound = await otpVerification.find({ email: req.session.email })
 
@@ -101,6 +101,7 @@ authentication.post("/signup", async (req, res) => {
     else {
         req.session.email = userEmail;
         req.session.otpCount = 1;
+        console.log("second: "+req.session.email);
         try {
             sentOtp(userEmail);
         } catch (error) {

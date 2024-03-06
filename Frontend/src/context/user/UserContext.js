@@ -1,8 +1,9 @@
-import React, { createContext, useState } from "react";
+import { createContext, useState } from "react";
 
 export const UserContext = createContext();
 
 const UserContextWrapper = ({children}) => {
+    
     const initialState = {
         email: '',
         fullname: '',
@@ -13,7 +14,6 @@ const UserContextWrapper = ({children}) => {
         isUserLogged: false,
     };
     const [userState, setUserState] = useState(initialState);
-    
     return (
         <UserContext.Provider value={{ ...userState, setUserState}}>
             {children}
@@ -21,4 +21,4 @@ const UserContextWrapper = ({children}) => {
     )
 }
 
-export default React.memo(UserContextWrapper);
+export default UserContextWrapper;

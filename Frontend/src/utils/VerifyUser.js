@@ -22,7 +22,7 @@ const VerifyUser = async () => {
                 return false;
             }
             else {
-                return response.data.user;
+                return true;
             }
         } catch (error) {
             console.log("error while verifying");

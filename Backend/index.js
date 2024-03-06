@@ -19,7 +19,7 @@ const corsOptions = {
 
 dotenv.config();
 const app = express();
-app.set('trust proxy', 2);
+app.set('trust proxy', 1);
 app.use(cors(corsOptions));
 
 
@@ -32,8 +32,8 @@ app.use(session({
   name: 'session',
   cookie: {
     maxAge: 900000, // Set the expiration time to 10 seconds (in milliseconds)
-    sameSite: 'None',
-    secure: true, 
+    // sameSite: 'None',
+    // secure: true, 
   },
 }));
 
