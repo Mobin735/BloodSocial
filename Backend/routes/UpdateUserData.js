@@ -34,19 +34,28 @@ UpdateUserData.post("/update", VerifyJWT, async (req, res) => {
 
     try {
         const isUserNameOrMobileTaken = await user.findOne({
-            $or: [
-                {
+            $and: [
+              {
+                $or: [
+                  {
                     fullname: {
-                        $regex: new RegExp("^" + fullname.toLowerCase() + "$", "i"),
+                      $regex: new RegExp("^" + fullname.toLowerCase() + "$", "i"),
                     },
-                },
-                {
+                  },
+                  {
                     mobile: mobile,
-                },
+                  },
+                ],
+              },
+              {
+                email: { $ne: email },
+              },
             ],
-        });
+          });
+          
+        console.log(isUserNameOrMobileTaken);
 
-        if (isUserNameOrMobileTaken !== null && isUserNameOrMobileTaken.email !== email) {
+        if (isUserNameOrMobileTaken !== null) {
             res.status(200).json({ message: "already exist" });
         }
         else {
