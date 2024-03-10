@@ -4,6 +4,7 @@ import Home from "./pages/home/Home"
 import Login from "./pages/login/Login";
 import Profile from "./pages/profile/Profile";
 import UserContextWrapper from "./context/user/UserContext";
+import Nearby from "./pages/nearby/Nearby";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Home />}/>
+            <Route path="/nearby" element={<Nearby />}/>
             <Route path="/login" element={<Login />}/>
             <Route path="/profile" element={<Profile />}/>
             <Route path="/*" element={<h1>404 Page not found!</h1>} />

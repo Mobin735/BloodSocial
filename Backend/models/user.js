@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
     },
     mobile: {
         type: Number,
-        default: '' // You can set the default value to 0 or any other default number
+        default: '' 
     },
     bloodtype: {
         type: String,

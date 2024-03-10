@@ -28,7 +28,7 @@ function NavigationBar() {
                 <Navbar.Collapse id="navbarScroll">
                     <Nav className="me-auto my-2" style={{ maxHeight: 'auto' }}>
                         <NavLink to="/" className="nav-link">Home</NavLink>
-                        <NavLink to="/login" className="nav-link">Find Nearby</NavLink>
+                        <NavLink to="/nearby" className="nav-link">Find Nearby</NavLink>
                         <NavLink to="/login" className="nav-link">Request</NavLink>
                         <NavLink to="/profile" className="nav-link">Profile</NavLink>
                     </Nav>

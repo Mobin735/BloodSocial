@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import "./utils/dbConnect.js";
 import authentication from "./routes/authentication.js";
 import verifyuser from "./routes/verifyuser.js";
+import Nearby from "./routes/Nearby.js"
 import otpVerification from "./models/otpVerification.js";
 import UpdateUserData from "./routes/UpdateUserData.js";
 
@@ -41,12 +42,13 @@ const port = process.env.PORT;
 
 app.use("/user", authentication);
 app.use("/userdata", UpdateUserData);
-app.use("/auth", verifyuser)
+app.use("/auth", verifyuser);
+app.use("/search", Nearby);
 
 app.get("/", (req, res) => res.send("Express on Vercel"));
 
 cron.schedule(
-  "*/15 * * * *",
+  "0 0 * * *",
   async () => {
     try {
       const currentTime = new Date(Date.now());

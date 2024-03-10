@@ -35,22 +35,22 @@ authentication.post("/login", async (req, res) => {
     }
 });
 
-authentication.post("/test", async (req, res) => {
-    await user.deleteMany({ email: "gamesproject09@gmail.com" })
-    // await user.deleteMany({ email: "gamesproject09@gmail.com" })
-    // if (req.session.email) {
-    //     console.log("session found");
-    //     console.log(req.session);
-    //     req.session.destroy();
-    //     console.log(req.session);
-    //     res.cookie("token","helooooooo");
-    // }
-    // else {
-    //     console.log("session not found and created");
-    //     req.session.email = "mobin";
-    // }
-    res.send("hello");
-})
+// authentication.post("/test", async (req, res) => {
+//     await user.deleteMany({ email: "gamesproject09@gmail.com" })
+//     // await user.deleteMany({ email: "gamesproject09@gmail.com" })
+//     // if (req.session.email) {
+//     //     console.log("session found");
+//     //     console.log(req.session);
+//     //     req.session.destroy();
+//     //     console.log(req.session);
+//     //     res.cookie("token","helooooooo");
+//     // }
+//     // else {
+//     //     console.log("session not found and created");
+//     //     req.session.email = "mobin";
+//     // }
+//     res.send("hello");
+// })
 
 authentication.post("/signup", async (req, res) => {
     let { otp, userEmail, userPass, forgetPass } = req.body;

@@ -42,8 +42,9 @@
     }
 }
 
-.select-btn {
+.profile-select-btn {
     font-size: 1.3rem !important;
+    color: white !important;
 }
 
 input::-webkit-outer-spin-button,
@@ -86,7 +87,7 @@ input[type=number] {
         }
     }
 
-    .select-btn {
+    .profile-select-btn {
         font-size: 1.1rem !important;
     }
 

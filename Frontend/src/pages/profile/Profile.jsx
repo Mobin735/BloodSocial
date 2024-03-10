@@ -15,7 +15,7 @@ import MiniLoader from "../../components/small/MiniLoader";
 import Notification from "../../components/small/Notification";
 
 const citiesData = {
-    Gujarat: ["Surat", "Ahmedabad", "Patan"],
+    Gujarat: ["Palanpur", "Surat", "Ahmedabad", "Patan"],
     Maharashtra: ["Mumbai", "Thane"]
 }
 
@@ -75,7 +75,7 @@ export default function Profile() {
         };
         checkAuth();
         return;
-    }, [dataUpdate])
+    }, [dataUpdate ,setUserState])
 
     const stateChange = (selectedState) => {
         setState(selectedState);
@@ -238,7 +238,7 @@ export default function Profile() {
                                                 textweight='200'
                                                 class_name="subcontainer-input-text" />) :
                                         (
-                                            <select name="bloodtype" className="select-btn" value={BloodType} onChange={(e) => { setBloodType(e.target.value) }}>
+                                            <select name="bloodtype" className="select-btn profile-select-btn" value={BloodType} onChange={(e) => { setBloodType(e.target.value) }}>
                                                 <option value="">Select your blood type</option>
                                                 <option value="A+">A+</option>
                                                 <option value="A-">A-</option>
@@ -267,7 +267,7 @@ export default function Profile() {
                                                 textweight='200'
                                                 class_name="subcontainer-input-text" />) :
                                         (
-                                            <select name="state" className="select-btn" value={State} onChange={(e) => { stateChange(e.target.value) }}>
+                                            <select name="state" className="select-btn profile-select-btn" value={State} onChange={(e) => { stateChange(e.target.value) }}>
                                                 <option value="">Select your state</option>
                                                 <option key="Gujarat" value="Gujarat">Gujarat</option>
                                                 <option key="Maharashtra" value="Maharashtra">Maharashtra</option>
@@ -291,7 +291,7 @@ export default function Profile() {
                                                 class_name="subcontainer-input-text" />) :
                                         (
 
-                                            <select name="city" className="select-btn" value={City} onChange={(e) => { setCity(e.target.value) }}>
+                                            <select name="city" className="select-btn profile-select-btn" value={City} onChange={(e) => { setCity(e.target.value) }}>
                                                 <option value="">Select your city</option>
                                                 {cities.length > 0 &&
                                                     cities.map(city => (

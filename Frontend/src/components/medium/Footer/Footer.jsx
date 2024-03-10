@@ -17,8 +17,8 @@ function FooterFunction() {
                 </div>
                 <div className="navigation item">
                     <Whitetext class_name='first-banner-text' text='Navigation' colour='white' textsize='1.5rem' textweight='600' />
-                    <NavLink to="/login" className="nav-link">Home</NavLink>
-                    <NavLink to="/login" className="nav-link">Find Nearby</NavLink>
+                    <NavLink to="/" className="nav-link">Home</NavLink>
+                    <NavLink to="/nearby" className="nav-link">Find Nearby</NavLink>
                     <NavLink to="/login" className="nav-link">Request</NavLink>
                     <NavLink to="/profile" className="nav-link">Profile</NavLink>
                 </div>

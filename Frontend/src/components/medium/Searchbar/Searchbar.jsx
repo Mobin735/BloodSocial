@@ -1,7 +1,73 @@
+import { useContext, useState } from "react";
 import Whitetext from "../../small/Whitetext";
 import "./Searchbar.css";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { UserContext } from "../../../context/user/UserContext";
 
-export default function Searchbar({searchbar_id}) {
+const citiesData = {
+  Gujarat: ["Palanpur", "Surat", "Ahmedabad", "Patan"],
+  Maharashtra: ["Mumbai", "Thane"]
+}
+
+export default function Searchbar({ searchbar_id }) {
+
+  const [bloodtype, setBloodType] = useState('');
+  const [state, setState] = useState('');
+  const [city, setCity] = useState('');
+  const [type, setType] = useState('');
+  const [cities, setCities] = useState([]);
+  const location = useLocation();
+  const currentPath = location.pathname;
+  const navigate = useNavigate();
+
+  const { setNearByLoader, setDonarSearches, setNotification } = useContext(UserContext);
+
+  const stateChange = (selectedState) => {
+    setState(selectedState);
+    fetchCities(selectedState);
+  }
+
+  const fetchCities = (selectedState) => {
+    if (citiesData.hasOwnProperty(selectedState)) {
+      setCities(citiesData[selectedState]);
+    }
+    else {
+      setCities([]);
+    }
+    setCity('');
+  }
+
+  const submitSearch = async () => {
+    if (bloodtype === '' || state === '' || city === '' || type === '') {
+      return;
+    }
+    else {
+      if (currentPath === '/') {
+        navigate("/nearby")
+      }
+      setNearByLoader(true);
+      setDonarSearches([]);
+      const result = await axios.get(`${process.env.REACT_APP_API}/search/donars`, {
+        params: { bloodtype, state, city }
+      }); 
+      if (result.data.donars?.length > 0) {
+        result.data.donars.map((user) => {
+          return setDonarSearches((prevstates) => [
+            ...prevstates,
+            { Donarname: user }
+          ])
+        })
+      }
+      const donarsCount = result.data.donars?.length ?? 0;
+      setNotification(`${donarsCount} donars found`);
+      setTimeout(() => {
+        setNotification('');
+      }, 4500);
+      setNearByLoader(false);
+    }
+  }
+
   return (
     <>
       <div className="search-bar" id={searchbar_id}>
@@ -12,7 +78,7 @@ export default function Searchbar({searchbar_id}) {
             textsize="1.25rem"
             textweight="400"
           />
-          <select name="blood-type" className="select-btn">
+          <select name="blood-type" className="select-btn" value={bloodtype} onChange={(e) => { setBloodType(e.target.value) }}>
             <option value="">Select your blood type</option>
             <option value="A+">A+</option>
             <option value="A-">A-</option>
@@ -24,16 +90,17 @@ export default function Searchbar({searchbar_id}) {
             <option value="O-">O-</option>
           </select>
         </div>
-        <div className="search-container">
+        <div className="search-container" value={state} onChange={(e) => { stateChange(e.target.value) }}>
           <Whitetext
             text="State"
             colour="white"
             textsize="1.25rem"
             textweight="400"
           />
-          <select name="state" className="select-btn">
-            <option value="">Select State</option>
-            <option value="gujarat">Gujarat</option>
+          <select name="state" className="select-btn" value={state} onChange={(e) => { stateChange(e.target.value) }}>
+            <option value="">Select your state</option>
+            <option key="Gujarat" value="Gujarat">Gujarat</option>
+            <option key="Maharashtra" value="Maharashtra">Maharashtra</option>
           </select>
         </div>
         <div className="search-container">
@@ -43,11 +110,14 @@ export default function Searchbar({searchbar_id}) {
             textsize="1.25rem"
             textweight="400"
           />
-          <select name="city" className="select-btn">
-            <option value="">Select City</option>
-            <option value="ahmedabar">Ahmedabad</option>
-            <option value="surat">Surat</option>
-            <option value="vadodara">Vadodara</option>
+          <select name="city" className="select-btn" value={city} onChange={(e) => { setCity(e.target.value) }}>
+            <option value=''>Select City</option>
+            {
+              cities.length > 0 &&
+              cities.map(city => (
+                <option key={city} value={city}>{city}</option>
+              ))
+            }
           </select>
         </div>
         <div className="search-container">
@@ -57,14 +127,13 @@ export default function Searchbar({searchbar_id}) {
             textsize="1.25rem"
             textweight="400"
           />
-          <select name="donar-type" className="select-btn">
+          <select name="donar-type" className="select-btn" value={type} onChange={(e) => { setType(e.target.value) }}>
             <option value="">Select Type</option>
             <option value="Donors">Donors</option>
-            <option value="Bloodblank">Bloodblank</option>
           </select>
         </div>
 
-        <button className="search-btn">
+        <button className="search-btn home" onClick={submitSearch}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             version="1.1"

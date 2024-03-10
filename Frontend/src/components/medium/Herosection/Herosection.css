@@ -14,12 +14,20 @@
     justify-content: center;
 }
 
+.big-hero-text {
+    text-align: center;
+}
+
 @media (max-width: 786px) {
     .general-section {
         height: 25vh;
         background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.40)), url('../../../assets/hero-section.jpg');
         background-size: cover;
         background-position: center;
+
+        p {
+            width: 90% !important;
+        }
     }
 
     .big-hero-text {

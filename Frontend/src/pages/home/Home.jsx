@@ -2,15 +2,16 @@ import { useContext, useEffect } from "react";
 import Footer from "../../components/medium/Footer/Footer";
 import Navbar from "../../components/medium/Navbar/Navbar";
 import Searchbar from "../../components/medium/Searchbar/Searchbar";
-import Button from "../../components/small/Button";
 import Info from "../../components/small/Info";
 import Whitetext from "../../components/small/Whitetext";
 import VerifyUser from "../../utils/VerifyUser";
 import './Home.css';
 import { UserContext } from "../../context/user/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-    const { setUserState } = useContext(UserContext);
+    const { setUserState, isUserLogged } = useContext(UserContext);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const isLogged = async () => {
@@ -24,7 +25,7 @@ export default function Home() {
         }
         isLogged();
         return ;
-    }, [setUserState]);
+    }, [isUserLogged,setUserState]);
 
     return (
         <>
@@ -43,8 +44,12 @@ export default function Home() {
                         textweight="500"
                         class_name="small-hero-text" />
                     <div className="hero-section-mobile-btn">
-                        <Button text='Register Now' text_size='1rem' bg_color='red' />
-                        <Button text='Search Donor' text_size='1rem' bg_color='#2F2F2F' />
+                        <button onClick={()=>{navigate("/login")}} className="home-btn" style={{textsize:"1rem", backgroundColor:"red", width:"100%"}}>
+                            Register Now
+                        </button>
+                        <button onClick={()=>{navigate("/nearby")}} className="home-btn" style={{textsize:"1rem", backgroundColor:"#2F2F2F", width:"100%"}}>
+                            Search Donor
+                        </button>
                     </div>
                 </div>
                 <div className="home-searchbar">
@@ -75,7 +80,9 @@ export default function Home() {
                         <Whitetext class_name='first-banner-text' text='Donate and save lives!' colour='white' textsize='1.688rem' textweight='600' />
                         <Whitetext class_name='second-banner-text' text='Sign up to find blood donors near you and receive updates on new blood request' colour='white' textsize='1.188rem' textweight='300' />
                     </div>
-                    <Button text='Sign up' text_size='1.55vw' bg_color='black' />
+                    <button className="home-btn" onClick={()=>{navigate("/login")}}>
+                        Sign up
+                    </button>
                 </div>
             </div>
             <Footer />

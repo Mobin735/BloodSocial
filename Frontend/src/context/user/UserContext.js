@@ -13,9 +13,25 @@ const UserContextWrapper = ({children}) => {
         city: '',
         isUserLogged: false,
     };
+
     const [userState, setUserState] = useState(initialState);
+    const [donarSearches, setDonarSearches] = useState([]);
+    const [nearByLoader, setNearByLoader] = useState(false);
+    const [notification, setNotification] = useState("");
+
+    const props ={
+        ...userState,
+        setUserState,
+        donarSearches,
+        setDonarSearches,
+        nearByLoader, 
+        setNearByLoader, 
+        notification, 
+        setNotification
+    }
+
     return (
-        <UserContext.Provider value={{ ...userState, setUserState}}>
+        <UserContext.Provider value={{...props}}>
             {children}
         </UserContext.Provider>
     )
