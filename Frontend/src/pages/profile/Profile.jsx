@@ -75,7 +75,7 @@ export default function Profile() {
         };
         checkAuth();
         return;
-    }, [dataUpdate ,setUserState])
+    }, [dataUpdate, setUserState])
 
     const stateChange = (selectedState) => {
         setState(selectedState);
@@ -112,13 +112,14 @@ export default function Profile() {
     const verifyUserDetails = async () => {
         const isDataChanged = DataVerify();
         if (!isDataChanged) {
-            setNotification("Change userdetails to update"); 
+            setNotification("Change userdetails to update");
         }
         const isCookieExist = GetCookie();
         if (isDataChanged && isCookieExist) {
             try {
                 setMiniLoader(true);
                 const isUpdate = await axios.post(`${process.env.REACT_APP_API}/userdata/update`, {
+                    email: email,
                     fullname: FullName,
                     mobile: Mobile,
                     bloodtype: BloodType,
@@ -131,14 +132,25 @@ export default function Profile() {
                     // withCredentials: true,
                     // mode: 'cors',
                 })
-                
+
                 if (isUpdate.data.message === 'updated') {
                     setDataUpdate(true);
                     setMiniLoader(false);
                     setNotification("UserDetails updated successfully, To donate blood all data are required");
                 }
                 else {
-                    setNotification("problem while updating data");
+                    if (isUpdate.data.message === 'already exist') {
+                        setMiniLoader(false);
+                        setFullName(fullname);
+                        setState(state);
+                        setCity(city);
+                        setBloodType(bloodType);
+                        setMobile(mobile ?? '');
+                        setNotification("You can't enter this Fullname or mobile");
+                    }
+                    else {
+                        setNotification("problem while updating data");
+                    }
                 }
             } catch (error) {
                 console.log("error while sending data update req to server");
@@ -160,7 +172,7 @@ export default function Profile() {
                     <Navbar />
                     <div className="Web-container">
                         <Herosection text='User Profile' />
-                        {notification !== '' && <Notification text={notification} margintop={"3rem"} mobilemargintop={"1.5rem"} height={"50px"}/>}
+                        {notification !== '' && <Notification text={notification} margintop={"3rem"} mobilemargintop={"1.5rem"} height={"50px"} />}
                         <div className="profile-container">
                             {miniLoader && <MiniLoader />}
                             <div className="profile-bar">

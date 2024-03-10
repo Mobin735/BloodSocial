@@ -30,20 +30,39 @@ UpdateUserData.get("/getdata", VerifyJWT, async (req, res) => {
 
 UpdateUserData.post("/update", VerifyJWT, async (req, res) => {
     const userEmail = req.data.user.email
-    const { fullname, mobile, bloodtype, state, city } = req.body;
+    const { email, fullname, mobile, bloodtype, state, city } = req.body;
 
     try {
-        await user.updateOne({ email: userEmail }, {
-            fullname: fullname,
-            mobile: mobile,
-            bloodtype: bloodtype,
-            state: state,
-            city: city
-        })
+        const isUserNameOrMobileTaken = await user.findOne({
+            $or: [
+                {
+                    fullname: {
+                        $regex: new RegExp("^" + fullname.toLowerCase() + "$", "i"),
+                    },
+                },
+                {
+                    mobile: mobile,
+                },
+            ],
+        });
 
-        res.status(200).json({ message: "updated" });
+        if (isUserNameOrMobileTaken !== null && isUserNameOrMobileTaken.email !== email) {
+            res.status(200).json({ message: "already exist" });
+        }
+        else {
+            await user.updateOne({ email: userEmail }, {
+                fullname: fullname,
+                mobile: mobile,
+                bloodtype: bloodtype,
+                state: state,
+                city: city
+            })
+            res.status(200).json({ message: "updated" });
+        }
+        return;
     } catch (error) {
         res.json({ message: "error while updating data to DB!" });
+        return;
     }
 })
 
