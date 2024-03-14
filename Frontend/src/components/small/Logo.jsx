@@ -7,14 +7,14 @@ const LogoContainer = styled.div`
 `;
 
 const BloodText = styled.p`
-    color: white;
+    color: #ff0000;
     letter-spacing: 1.2px;
     font-weight: 800;
     margin: 0;
 `;
 
 const SocialText = styled.p`
-    color: red;
+    color: #ffffff;
     letter-spacing: 1.2px;
     font-weight: 800;
     margin: 0;
