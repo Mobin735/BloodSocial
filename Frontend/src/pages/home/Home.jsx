@@ -22,6 +22,12 @@ export default function Home() {
                     isUserLogged: true
                 }))
             }
+            else {
+                setUserState((prevstate) => ({
+                    ...prevstate,
+                    isUserLogged: false
+                }));
+            }
         }
         isLogged();
         return ;
@@ -72,6 +78,7 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
+                
                 <Info class_name='first_info' imgpath={require('../../assets/1img.jpg')} title_text="Why Donate Blood?" des_text='Donating blood is a crucial and selfless act that directly saves lives and supports community health. Blood donations are essential for various medical treatments, emergencies, and disaster response. With no substitute for human blood, this simple gesture not only benefits recipients but also contributes to ongoing medical research. The act fosters a sense of community and solidarity, showcasing compassion and altruism.' />
                 <Info class_name='second_info' imgpath={require('../../assets/3img.jpg')} title_text="Benefits Of Donating Blood" des_text='Donating blood provides a multitude of benefits, contributing significantly to individual and community well-being. Beyond its immediate impact on saving lives and supporting emergency responses, regular blood donation promotes community health resilience. Additionally, it plays a crucial role in advancing medical research, driving progress in healthcare.' />
                 <div className="home-bottom-banner">

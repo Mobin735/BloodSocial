@@ -3,6 +3,34 @@ import user from "../models/user.js";
 
 const nearby = express.Router();
 
+nearby.get("/nearbyusers", async (req, res) => {
+    const { lon,lat } = req.query;
+    
+    const users = await user.find({
+        fullname: { $ne: '' },
+        bloodtype: { $ne: '' },
+        userlocation: {
+            $near: {
+                $geometry: {
+                    type: "Point",
+                    coordinates: [parseFloat(lon), parseFloat(lat)]
+                },
+                $maxDistance: 5000
+            }
+        }
+    });
+
+    const nearbyusers = users.map((user)=>({
+        name: user.fullname,
+        bloodtype: user.bloodtype,
+        coordinates: user.userlocation,
+        updatedtime: user.updatedtime
+    }));
+
+    // console.log("nearby users",nearbyusers);
+    res.status(200).json({message:"usersFetched",users:nearbyusers});
+})
+
 nearby.get("/donars", async (req, res) => {
     const { bloodtype, state, city } = req.query;
 

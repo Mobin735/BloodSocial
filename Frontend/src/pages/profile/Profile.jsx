@@ -28,6 +28,8 @@ export default function Profile() {
     const [City, setCity] = useState(city);
     const [BloodType, setBloodType] = useState(bloodType);
     const [Mobile, setMobile] = useState(mobile);
+    const [UserLocation, setUserLocation] = useState([]);
+    const [updatedTime, setUpdatedTime] = useState(0);
     const [cities, setCities] = useState([]);
     const [loader, setLoader] = useState(true);
     const [dataUpdate, setDataUpdate] = useState(false);
@@ -72,6 +74,16 @@ export default function Profile() {
                 }
             }
             setLoader(false);
+            //getting user location access permission
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        console.log(position);
+                        setUserLocation([position.coords.longitude, position.coords.latitude])
+                        setUpdatedTime(position.timestamp);
+                    }
+                )
+            }
         };
         checkAuth();
         return;
@@ -116,6 +128,7 @@ export default function Profile() {
         }
         const isCookieExist = GetCookie();
         if (isDataChanged && isCookieExist) {
+            console.log("serr", UserLocation);
             try {
                 setMiniLoader(true);
                 const isUpdate = await axios.post(`${process.env.REACT_APP_API}/userdata/update`, {
@@ -124,7 +137,9 @@ export default function Profile() {
                     mobile: Mobile,
                     bloodtype: BloodType,
                     state: State,
-                    city: City
+                    city: City,
+                    userCoordinates: UserLocation,
+                    updatedTime
                 }, {
                     headers: {
                         token: isCookieExist

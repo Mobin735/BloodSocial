@@ -1,6 +1,14 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+    userlocation: {
+        type: [Number],
+        required: true
+    },
+    updatedtime: {
+        type: Number,
+        require: true
+    },
     email: {
         type: String,
         required: true
@@ -31,6 +39,9 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-const user = mongoose.model('users',userSchema);
+// Define a 2dsphere index on the 'userlocation' field for geospatial queries
+userSchema.index({ userlocation: '2dsphere' });
 
-export default user;
+const User = mongoose.model('User', userSchema);
+
+export default User;

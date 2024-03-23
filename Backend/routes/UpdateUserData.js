@@ -30,8 +30,8 @@ UpdateUserData.get("/getdata", VerifyJWT, async (req, res) => {
 
 UpdateUserData.post("/update", VerifyJWT, async (req, res) => {
     const userEmail = req.data.user.email
-    const { email, fullname, mobile, bloodtype, state, city } = req.body;
-
+    const { email, fullname, mobile, bloodtype, state, city, userCoordinates, updatedTime } = req.body;
+    console.log("updateuserdetails mein userlocationnnnn",updatedTime);
     try {
         const isUserNameOrMobileTaken = await user.findOne({
             $and: [
@@ -52,19 +52,19 @@ UpdateUserData.post("/update", VerifyJWT, async (req, res) => {
               },
             ],
           });
-          
-        console.log(isUserNameOrMobileTaken);
 
         if (isUserNameOrMobileTaken !== null) {
             res.status(200).json({ message: "already exist" });
         }
         else {
             await user.updateOne({ email: userEmail }, {
-                fullname: fullname,
-                mobile: mobile,
-                bloodtype: bloodtype,
-                state: state,
-                city: city
+                fullname,
+                mobile,
+                bloodtype,
+                state,
+                city,
+                userlocation: userCoordinates,
+                updatedtime: updatedTime
             })
             res.status(200).json({ message: "updated" });
         }
