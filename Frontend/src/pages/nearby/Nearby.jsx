@@ -86,58 +86,58 @@ export default function Nearby() {
 
         map.current = new maptilersdk.Map(options);
 
-        // const users = donarSearches.length <= 0 && position != null ?
-        //     (await axios.get(`${process.env.REACT_APP_API}/search/nearbyusers`, { params: { lon: position.coords.longitude, lat: position.coords.latitude } })).data.users :
-        //     donarSearches;
+        const users = donarSearches.length <= 0 && position != null ?
+            (await axios.get(`${process.env.REACT_APP_API}/search/nearbyusers`, { params: { lon: position.coords.longitude, lat: position.coords.latitude } })).data.users :
+            donarSearches;
 
-        // users.forEach(user => {
-        //     const time = new Date(user.updatedtime).toLocaleString("en-IN");
-        //     const popupContent = `<h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Name: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.name}</span></h1>
-        //                              <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Bloodtype: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.bloodtype}</span></h1>
-        //                              <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Last Updated: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${time}</span></h1>`;
-        //     const popup = new maptilersdk.Popup({ offset: 25, html: true }).setHTML(popupContent);
-        //     new maptilersdk.Marker({ color: "red" }).setLngLat(user.coordinates).setPopup(popup).addTo(map.current);
-        // });
+        users.map((user) => {
+            const time = new Date(user.updatedtime).toLocaleString("en-IN");
+            const popupContent = `<h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Name: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.name}</span></h1>
+                                     <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Bloodtype: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.bloodtype}</span></h1>
+                                     <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Last Updated: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${time}</span></h1>`;
+            const popup = new maptilersdk.Popup({ offset: 25, html: true }).setHTML(popupContent);
+            new maptilersdk.Marker({ color: "red" }).setLngLat(user.coordinates).setPopup(popup).addTo(map.current);
+        });
 
 
-        if (donarSearches.length <= 0 && position != null) {
+        // if (donarSearches.length <= 0 && position != null) {
 
-            const nearbyUsers = await axios.get(`${process.env.REACT_APP_API}/search/nearbyusers`, {
-                params: {
-                    lon: position.coords.longitude,
-                    lat: position.coords.latitude
-                }
-            })
+        //     const nearbyUsers = await axios.get(`${process.env.REACT_APP_API}/search/nearbyusers`, {
+        //         params: {
+        //             lon: position.coords.longitude,
+        //             lat: position.coords.latitude
+        //         }
+        //     })
 
-            nearbyUsers.data.users.map((user) => {
-                const time = new Date(user.updatedtime).toLocaleString("en-IN");
-                var popup = new maptilersdk.Popup({ offset: 25, html: true }).setHTML(
-                    `<h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Name: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.name}</span></h1>
-                    <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Bloodtype: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.bloodtype}</span></h1>
-                    <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Last Updated: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${time}</span></h1>`
-                );
+        //     nearbyUsers.data.users.map((user) => {
+        //         const time = new Date(user.updatedtime).toLocaleString("en-IN");
+        //         var popup = new maptilersdk.Popup({ offset: 25, html: true }).setHTML(
+        //             `<h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Name: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.name}</span></h1>
+        //             <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Bloodtype: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.bloodtype}</span></h1>
+        //             <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Last Updated: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${time}</span></h1>`
+        //         );
 
-                new maptilersdk.Marker({ color: "red" })
-                    .setLngLat([user.coordinates[0], user.coordinates[1]])
-                    .setPopup(popup)
-                    .addTo(map.current);
-            })
-        }
-        else {
-            donarSearches.map((user) => {
-                const time = new Date(user.updatedtime).toLocaleString("en-IN");
-                var popup = new maptilersdk.Popup({ offset: 25, html: true }).setHTML(
-                    `<h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Name: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.name}</span></h1>
-                    <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Bloodtype: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.bloodtype}</span></h1>
-                    <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Last Updated: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${time}</span></h1>`
-                );
+        //         new maptilersdk.Marker({ color: "red" })
+        //             .setLngLat([user.coordinates[0], user.coordinates[1]])
+        //             .setPopup(popup)
+        //             .addTo(map.current);
+        //     })
+        // }
+        // else {
+        //     donarSearches.map((user) => {
+        //         const time = new Date(user.updatedtime).toLocaleString("en-IN");
+        //         var popup = new maptilersdk.Popup({ offset: 25, html: true }).setHTML(
+        //             `<h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Name: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.name}</span></h1>
+        //             <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Bloodtype: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.bloodtype}</span></h1>
+        //             <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Last Updated: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${time}</span></h1>`
+        //         );
 
-                new maptilersdk.Marker({ color: "red" })
-                    .setLngLat([user.coordinates[0], user.coordinates[1]])
-                    .setPopup(popup)
-                    .addTo(map.current);
-            })
-        }
+        //         new maptilersdk.Marker({ color: "red" })
+        //             .setLngLat([user.coordinates[0], user.coordinates[1]])
+        //             .setPopup(popup)
+        //             .addTo(map.current);
+        //     })
+        // }
     }
     return (
         <>
