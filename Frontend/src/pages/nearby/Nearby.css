@@ -72,9 +72,8 @@
 @media (max-width: 786px) {
 
     .map-wrap {
-        width: 90%;
-        /* margin: auto; */
         margin-top: 1.5rem;
+        height: 55vh !important;
     }
 
     .nearby-searchbar {
