@@ -51,11 +51,16 @@ export default function Searchbar({ searchbar_id }) {
       const result = await axios.get(`${process.env.REACT_APP_API}/search/donars`, {
         params: { bloodtype, state, city }
       }); 
+      console.log(result.data.donars);
       if (result.data.donars?.length > 0) {
         result.data.donars.map((user) => {
           return setDonarSearches((prevstates) => [
             ...prevstates,
-            { Donarname: user }
+            { name: user.name,
+              bloodtype: user.bloodtype,
+              coordinates: user.coordinates,
+              updatedtime: user.updatedtime 
+            }
           ])
         })
       }

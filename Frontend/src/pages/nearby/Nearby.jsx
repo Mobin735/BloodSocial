@@ -42,26 +42,14 @@ export default function Nearby() {
 
     const isLogged = async () => {
         const result = await VerifyUser();
-        if (result) {
-            setUserState((prevstate) => ({
-                ...prevstate,
-                isUserLogged: true
-            }));
-            setIsLoggedInChecked(true); // Mark login check as done
-        }
-        else {
-            setUserState((prevstate) => ({
-                ...prevstate,
-                isUserLogged: false
-            }));
-        }
+        setUserState(prevstate => ({ ...prevstate, isUserLogged: result }));
+        setIsLoggedInChecked(result);
     }
 
     useEffect(() => {
         if (!isLoggedInChecked) { // Check if login verification is needed
             isLogged();
         }
-        if (map.current) return; // stops map from initializing more than once
 
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -72,49 +60,45 @@ export default function Nearby() {
             // Geolocation not supported by the browser
             mapping(null);
         }
-        
-    }, [isLoggedInChecked, setUserState])
+
+    }, [isLoggedInChecked, setUserState, donarSearches])
 
     const mapping = async (position) => {
-        // console.log("Mappp",position);
+        console.log("Mapppasasaas", donarSearches);
+
         const options = {
             container: mapContainer.current,
             style: maptilersdk.MapStyle.STREETS,
         };
 
-        if (position == null) {
-            options.geolocate = maptilersdk.GeolocationType.POINT;
-        } else {
-            options.center = [position.coords.longitude, position.coords.latitude];
+        if (donarSearches.length <= 0) {
+            if (position == null) {
+                options.geolocate = maptilersdk.GeolocationType.POINT;
+            } else {
+                options.center = [position.coords.longitude, position.coords.latitude];
+                options.zoom = 14.00;
+            }
+        }
+        else {
+            options.center = donarSearches[0].coordinates;
             options.zoom = 14.00;
         }
 
-        map.current = new maptilersdk.Map(options); 
-          
-        console.log("testing",position.coords.longitude,position.coords.latitude);
-        const nearbyUsers = await axios.get(`${process.env.REACT_APP_API}/search/nearbyusers`,{
-            params: {
-                lon: position.coords.longitude,
-                lat: position.coords.latitude
-            }
-        })
+        map.current = new maptilersdk.Map(options);
 
-        nearbyUsers.data.users.map((user)=>{
+        const users = donarSearches.length <= 0 && position != null ?
+            (await axios.get(`${process.env.REACT_APP_API}/search/nearbyusers`, { params: { lon: position.coords.longitude, lat: position.coords.latitude } })).data.users :
+            donarSearches;
+
+        users.forEach(user => {
             const time = new Date(user.updatedtime).toLocaleString("en-IN");
-            var popup = new maptilersdk.Popup({ offset: 25, html: true }).setHTML(
-                `<h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Name: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.name}</span></h1>
-                <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Bloodtype: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.bloodtype}</span></h1>
-                <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Last Updated: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${time}</span></h1>`
-            );
-
-            new maptilersdk.Marker({ color: "red" })
-                .setLngLat([user.coordinates[0], user.coordinates[1]])
-                .setPopup(popup)
-                .addTo(map.current);
-        })
+            const popupContent = `<h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Name: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.name}</span></h1>
+                                     <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Bloodtype: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${user.bloodtype}</span></h1>
+                                     <h1 style="color: #ff0000; font-size: 16px; font-weight: 700; white-space: nowrap;">Last Updated: <span style="color: #000000; font-size: 16px; font-weight: 500; font-family: inherit;">${time}</span></h1>`;
+            const popup = new maptilersdk.Popup({ offset: 25, html: true }).setHTML(popupContent);
+            new maptilersdk.Marker({ color: "red" }).setLngLat(user.coordinates).setPopup(popup).addTo(map.current);
+        });
     }
-
-
     return (
         <>
             <NavBar />
@@ -129,11 +113,11 @@ export default function Nearby() {
                     {
                         donarSearches.length > 0 ?
                             donarSearches.map((donars) => (
-                                <div className="search-subcontainer" key={donars.Donarname.name}>
+                                <div className="search-subcontainer" key={donars.name}>
                                     <div className="search-innercontainer">
                                         <img src={require('../../assets/1img.jpg')} alt="" />
                                         <Whitetext
-                                            text={donars.Donarname.name}
+                                            text={donars.name}
                                             colour="white"
                                             textsize="2rem"
                                             textweight="300"

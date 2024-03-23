@@ -39,8 +39,12 @@ nearby.get("/donars", async (req, res) => {
             const data = await user.find({fullname: { $ne: '' }, bloodtype, state, city });
             if (data.length > 0) {
                 const donars = data.map((donar) => ({
-                    name: donar.fullname
+                    name: donar.fullname,
+                    bloodtype: donar.bloodtype,
+                    coordinates: donar.userlocation,
+                    updatedtime: donar.updatedtime
                 }));
+                // console.log(donars);
                 res.status(200).json({ message: "Donars Founded", donars})
                 return;
             }
