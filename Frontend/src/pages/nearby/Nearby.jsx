@@ -15,23 +15,23 @@ import * as maptilersdk from '@maptiler/sdk';
 import { useRef } from "react";
 import axios from "axios";
 
-const UsersLocation = [
-    {
-        lon: 72.410100, 
-        lat: 24.168452, 
-        message: "mobin"
-    },
-    {
-        lon: 72.400058, 
-        lat: 24.162031, 
-        message: "John"
-    },
-    {
-        lon: 72.420657, 
-        lat: 24.170762, 
-        message: "Patrick"
-    },
-]
+// const UsersLocation = [
+//     {
+//         lon: 72.410100, 
+//         lat: 24.168452, 
+//         message: "mobin"
+//     },
+//     {
+//         lon: 72.400058, 
+//         lat: 24.162031, 
+//         message: "John"
+//     },
+//     {
+//         lon: 72.420657, 
+//         lat: 24.170762, 
+//         message: "Patrick"
+//     },
+// ]
 
 export default function Nearby() {
     const { donarSearches, nearByLoader, notification, setUserState } = useContext(UserContext);
@@ -89,7 +89,8 @@ export default function Nearby() {
             options.zoom = 14.00;
         }
 
-        map.current = new maptilersdk.Map(options)
+        map.current = new maptilersdk.Map(options); 
+          
         console.log("testing",position.coords.longitude,position.coords.latitude);
         const nearbyUsers = await axios.get(`${process.env.REACT_APP_API}/search/nearbyusers`,{
             params: {

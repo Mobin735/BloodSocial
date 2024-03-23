@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema({
 });
 
 // Define a 2dsphere index on the 'userlocation' field for geospatial queries
-userSchema.index({ userlocation: '2dsphere' });
+// userSchema.index({ userlocation: '2dsphere' });
 
 const User = mongoose.model('User', userSchema);
 

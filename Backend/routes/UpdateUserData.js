@@ -31,7 +31,7 @@ UpdateUserData.get("/getdata", VerifyJWT, async (req, res) => {
 UpdateUserData.post("/update", VerifyJWT, async (req, res) => {
     const userEmail = req.data.user.email
     const { email, fullname, mobile, bloodtype, state, city, userCoordinates, updatedTime } = req.body;
-    console.log("updateuserdetails mein userlocationnnnn",updatedTime);
+    // console.log("updateuserdetails mein userlocationnnnn",updatedTime);
     try {
         const isUserNameOrMobileTaken = await user.findOne({
             $and: [
