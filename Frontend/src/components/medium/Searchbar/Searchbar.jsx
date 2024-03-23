@@ -47,7 +47,7 @@ export default function Searchbar({ searchbar_id }) {
         navigate("/nearby")
       }
       setNearByLoader(true);
-      setDonarSearches([]);
+      await setDonarSearches([]);
       const result = await axios.get(`${process.env.REACT_APP_API}/search/donars`, {
         params: { bloodtype, state, city }
       }); 
