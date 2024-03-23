@@ -23,6 +23,11 @@ const app = express();
 app.set('trust proxy', 1);
 app.use(cors(corsOptions));
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://blood-social.vercel.app');
+  // Add other CORS headers as needed
+  next();
+});
 
 app.use(express.json());
 app.use(cookieParser());
