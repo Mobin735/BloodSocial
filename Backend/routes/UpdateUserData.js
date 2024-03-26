@@ -1,8 +1,22 @@
 import express from "express";
-import { CreateJWT, VerifyJWT } from "../utils/JwtToken.js";
+import { VerifyJWT } from "../utils/JwtToken.js";
 import user from "../models/user.js";
 
 const UpdateUserData = express.Router();
+
+UpdateUserData.get("/updatelocation",VerifyJWT, async (req,res) => {
+    const email = req.data.user.email;
+    const { userCoordinates, updatedTime} = req.query;
+    try {
+      await user.updateOne({email}, {
+          userlocation: userCoordinates,
+          updatedtime: updatedTime
+      })
+      res.status(200).json({isLocationUpdated:true});
+    } catch (error) {
+        res.status(200).json({isLocationUpdated:false});
+    }    
+})
 
 UpdateUserData.get("/getdata", VerifyJWT, async (req, res) => {
     const email = req.data.user.email;
@@ -28,9 +42,9 @@ UpdateUserData.get("/getdata", VerifyJWT, async (req, res) => {
     }
 })
 
-UpdateUserData.post("/update", VerifyJWT, async (req, res) => {
+UpdateUserData.get("/update", VerifyJWT, async (req, res) => {
     const userEmail = req.data.user.email
-    const { email, fullname, mobile, bloodtype, state, city, userCoordinates, updatedTime } = req.body;
+    const { fullname, mobile, bloodtype, state, city, userCoordinates, updatedTime } = req.body;
     // console.log("updateuserdetails mein userlocationnnnn",updatedTime);
     try {
         const isUserNameOrMobileTaken = await user.findOne({
@@ -48,7 +62,7 @@ UpdateUserData.post("/update", VerifyJWT, async (req, res) => {
                 ],
               },
               {
-                email: { $ne: email },
+                email: { $ne: userEmail },
               },
             ],
           });

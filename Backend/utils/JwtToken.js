@@ -23,13 +23,13 @@ export function VerifyJWT(req, res, next) {
         if (typeof authHeader !== 'undefined') {
             const cookies = authHeader.split("; ");
             const accessTokenCookie = cookies.find(cookie => cookie.startsWith('access_token='));
-    
             if (accessTokenCookie) {
                 const token = accessTokenCookie.split(" ")[1];
                 try {
                     const userData = jwt.verify(token, JWTSignature);
                     req.data = userData;
                     next();
+                    return;
                 } catch (error) {
                     res.json({ message: "invalid token" });
                 }   
@@ -37,7 +37,7 @@ export function VerifyJWT(req, res, next) {
                 res.json({ message: "token not found" });
             }
         } else {
-            res.status(402).json({ message: "invalid token" });
+            res.status(400).json({ message: "invalid token" });
         }
     } catch (error) {
         console.log(error);

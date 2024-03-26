@@ -16,6 +16,8 @@ export default function Searchbar({ searchbar_id }) {
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
   const [type, setType] = useState('');
+  const [cachedResult, setcachedResult] = useState(null);
+  const [cachedParams, setcachedParams] = useState({});
   const [cities, setCities] = useState([]);
   const location = useLocation();
   const currentPath = location.pathname;
@@ -38,19 +40,35 @@ export default function Searchbar({ searchbar_id }) {
     setCity('');
   }
 
-  const submitSearch = async () => {
-    if (bloodtype === '' || state === '' || city === '' || type === '') {
-      return;
+  const makeAPICall = async () => {
+    if (
+      bloodtype === cachedParams.bloodtype &&
+      state === cachedParams.state &&
+      city === cachedParams.city
+    ) {
+      return cachedResult;
+    } else {
+      const result = await axios.get(`${process.env.REACT_APP_API}/search/donars`, {
+        params: { bloodtype, state, city }
+      });
+      setcachedResult(result);
+      setcachedParams({bloodtype,state,city});
+      return result;
     }
+  };
+
+  const submitSearch = async () => {
+    if (
+      bloodtype === '' || state === '' || city === '' || type === ''
+    ) return;
+
     else {
       if (currentPath === '/') {
         navigate("/nearby")
       }
       setNearByLoader(true);
-      const result = await axios.get(`${process.env.REACT_APP_API}/search/donars`, {
-        params: { bloodtype, state, city }
-      });
-      console.log(result.data.donars);
+      const result = await makeAPICall();
+      // console.log(result.data.donars);
       if (result.data.donars?.length > 0) {
         const finalUsers = await result.data.donars.map((user) => ({
           name: user.name,
@@ -59,6 +77,9 @@ export default function Searchbar({ searchbar_id }) {
           updatedtime: user.updatedtime
         }))
         setDonarSearches(finalUsers);
+      }
+      else {
+        setDonarSearches([]);
       }
       const donarsCount = result.data.donars?.length ?? 0;
       setNotification(`${donarsCount} donars found`);

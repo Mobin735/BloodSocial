@@ -21,8 +21,8 @@ const citiesData = {
 
 export default function Profile() {
     const { email, fullname, mobile, bloodType, state, city, isUserLogged, setUserState } = useContext(UserContext);
-
     const [buttonState, setButtonState] = useState(true);
+    const [cachedLocation, setCachedLocation] = useState([]);
     const [FullName, setFullName] = useState(fullname);
     const [State, setState] = useState(state);
     const [City, setCity] = useState(city);
@@ -78,7 +78,7 @@ export default function Profile() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
-                        console.log(position);
+                        // console.log(position);
                         setUserLocation([position.coords.longitude, position.coords.latitude])
                         setUpdatedTime(position.timestamp);
                     }
@@ -127,12 +127,12 @@ export default function Profile() {
             setNotification("Change userdetails to update");
         }
         const isCookieExist = GetCookie();
+
         if (isDataChanged && isCookieExist) {
             console.log("serr", UserLocation);
             try {
                 setMiniLoader(true);
                 const isUpdate = await axios.post(`${process.env.REACT_APP_API}/userdata/update`, {
-                    email: email,
                     fullname: FullName,
                     mobile: Mobile,
                     bloodtype: BloodType,
@@ -177,6 +177,51 @@ export default function Profile() {
         }, 5000);
     }
 
+    const verifyLocation = async (position,cookie) => {
+        if (position.coords.longitude === cachedLocation[0] && position.coords.latitude === cachedLocation[1]) {
+            return {data:{isLocationUpdated:true}};
+        }
+        else {
+            const result = await axios.get(`${process.env.REACT_APP_API}/userdata/updatelocation`, {
+                params : {
+                    userCoordinates: [position.coords.longitude,position.coords.latitude],
+                    updatedTime: position.timestamp
+                },
+                headers: {
+                    token: cookie
+                }
+            })
+            setCachedLocation([position.coords.longitude,position.coords.latitude]);
+            return result;
+        }
+
+    }
+
+    const updateLocation = () => {
+        // await axios.get(`${process.env.REACT_APP_API}/userdata/updatelocation`);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const isCookieExist = GetCookie();
+                    if (isCookieExist) {
+                        setMiniLoader(true);
+                        const result = await verifyLocation(position,isCookieExist);
+                        if (result.data.isLocationUpdated) {
+                            setNotification("Location updated successfully!");
+                        }
+                        else {
+                            setNotification("Error while updating location");
+                        }
+                        setTimeout(() => {
+                            setNotification('');
+                        }, 3000);
+                        setMiniLoader(false);
+                    }
+                }
+            )
+        }
+    }
+
     if (loader) {
         return <Loader />;
     }
@@ -196,10 +241,13 @@ export default function Profile() {
                                     textsize="1.75rem"
                                     textweight="700"
                                     class_name="userdetail-title" />
-                                {buttonState ?
-                                    (<svg className="editbtn" onClick={EditButton} xmlns="http://www.w3.org/2000/svg" width="2.5rem" height="3rem" viewBox="0 0 24 24"><g fill="none" stroke="red" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"><path d="M9.533 11.15A1.823 1.823 0 0 0 9 12.438V15h2.578c.483 0 .947-.192 1.289-.534l7.6-7.604a1.822 1.822 0 0 0 0-2.577l-.751-.751a1.822 1.822 0 0 0-2.578 0z" /><path d="M21 12c0 4.243 0 6.364-1.318 7.682C18.364 21 16.242 21 12 21c-4.243 0-6.364 0-7.682-1.318C3 18.364 3 16.242 3 12c0-4.243 0-6.364 1.318-7.682C5.636 3 7.758 3 12 3" /></g></svg>) :
-                                    (<svg className="savebtn" onClick={verifyUserDetails} xmlns="http://www.w3.org/2000/svg" width="2.5em" height="3em" viewBox="0 0 24 24"><g fill="none" stroke="red" strokeWidth="2"><path d="M16 21v-2c0-1.886 0-2.828-.586-3.414C14.828 15 13.886 15 12 15h-1c-1.886 0-2.828 0-3.414.586C7 16.172 7 17.114 7 19v2" /><path strokeLinecap="round" d="M7 8h5" /><path d="M3 9c0-2.828 0-4.243.879-5.121C4.757 3 6.172 3 9 3h7.172c.408 0 .613 0 .796.076c.184.076.329.22.618.51l2.828 2.828c.29.29.434.434.51.618c.076.183.076.388.076.796V15c0 2.828 0 4.243-.879 5.121C19.243 21 17.828 21 15 21H9c-2.828 0-4.243 0-5.121-.879C3 19.243 3 17.828 3 15z" /></g></svg>)
-                                }
+                                <div style={{ display: "flex", columnGap: "1rem" }}>
+                                    <svg onClick={updateLocation} xmlns="http://www.w3.org/2000/svg" version="1.1" width="2.5rem" height="3rem" x="0" y="0" viewBox="0 0 1000 1000"><g><path d="M605.93 279.42A180 180 0 0 0 557 254.74a183.54 183.54 0 0 0-57-8.94 181.21 181.21 0 0 0-105.93 33.62c-77.35 55.14-97.91 161.33-48.3 242.33l72.24 118 63.91 104.36a21.2 21.2 0 0 0 36.16 0L582 639.71l72.24-118c49.6-80.96 29.04-187.15-48.31-242.29zM500 523.64a97.54 97.54 0 1 1 97.54-97.54A97.54 97.54 0 0 1 500 523.64zM177.88 324.51l8.4-63.87 8.39-63.87 51.12 39.2 51.11 39.21-59.51 24.67z" fill="#ff0000" opacity="1" data-original="#000000"></path><path d="M782.81 217.19a399.67 399.67 0 0 0-549-15.64l54.32 41.67a333 333 0 0 1 538.47 322 33.17 33.17 0 0 0 23 38.42l.82.24a33.07 33.07 0 0 0 41.8-25.18 399.92 399.92 0 0 0-109.41-361.51zM711.88 756.81a333 333 0 0 1-538.44-322 33.17 33.17 0 0 0-23-38.42l-.82-.24a33.07 33.07 0 0 0-41.8 25.18 399.91 399.91 0 0 0 658.44 377.1zM822.03 675.41l-59.49 24.73-59.49 24.73 51.16 39.16 51.17 39.15 8.33-63.89z" fill="#ff0000" opacity="1" data-original="#000000"></path></g></svg>
+                                    {buttonState ?
+                                        (<svg className="editbtn" onClick={EditButton} xmlns="http://www.w3.org/2000/svg" width="2.5rem" height="3rem" viewBox="0 0 24 24"><g fill="none" stroke="red" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"><path d="M9.533 11.15A1.823 1.823 0 0 0 9 12.438V15h2.578c.483 0 .947-.192 1.289-.534l7.6-7.604a1.822 1.822 0 0 0 0-2.577l-.751-.751a1.822 1.822 0 0 0-2.578 0z" /><path d="M21 12c0 4.243 0 6.364-1.318 7.682C18.364 21 16.242 21 12 21c-4.243 0-6.364 0-7.682-1.318C3 18.364 3 16.242 3 12c0-4.243 0-6.364 1.318-7.682C5.636 3 7.758 3 12 3" /></g></svg>) :
+                                        (<svg className="savebtn" onClick={verifyUserDetails} xmlns="http://www.w3.org/2000/svg" width="2.5em" height="3em" viewBox="0 0 24 24"><g fill="none" stroke="red" strokeWidth="2"><path d="M16 21v-2c0-1.886 0-2.828-.586-3.414C14.828 15 13.886 15 12 15h-1c-1.886 0-2.828 0-3.414.586C7 16.172 7 17.114 7 19v2" /><path strokeLinecap="round" d="M7 8h5" /><path d="M3 9c0-2.828 0-4.243.879-5.121C4.757 3 6.172 3 9 3h7.172c.408 0 .613 0 .796.076c.184.076.329.22.618.51l2.828 2.828c.29.29.434.434.51.618c.076.183.076.388.076.796V15c0 2.828 0 4.243-.879 5.121C19.243 21 17.828 21 15 21H9c-2.828 0-4.243 0-5.121-.879C3 19.243 3 17.828 3 15z" /></g></svg>)
+                                    }
+                                </div>
                             </div>
                             <div className="profile-subcontainer">
                                 <Whitetext text='Email'
