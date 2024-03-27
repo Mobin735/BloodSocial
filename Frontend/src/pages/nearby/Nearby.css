@@ -96,6 +96,7 @@
 }
 
 .requestBlood {
+    display: flex;
     width: 25rem;
     border-right: 3px solid #161616;
     border-top-right-radius: 0px !important;
