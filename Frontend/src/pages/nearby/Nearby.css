@@ -33,7 +33,7 @@
     justify-content: flex-start;
     background-color: #2f2f2f;
     border-radius: 20px;
-    margin-top: 3rem;
+    margin-top: 2rem;
     position: relative;
     height: 30rem;
     overflow-y: scroll;
@@ -69,6 +69,79 @@
     align-items: center;
 }
 
+.buttonContainer {
+    display: flex;
+    /* display: none; */
+    width: 100%;
+    /* height: 100%; */
+    min-height: 90px;
+    position: relative;
+    box-sizing: border-box;
+    border-radius: 20px;
+    margin-top: 3rem;
+
+    div {
+        /* width: 100%; */
+        color: white;
+        background-color: #7676762b;  
+        /* #37373738; */
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        column-gap: 10px;
+        cursor: pointer;
+        padding: 25px 20px;
+    }
+}
+
+.requestBlood {
+    width: 25rem;
+    border-right: 3px solid #161616;
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
+
+.requestBtn {
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+}
+
+.buttonContainer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(100deg, #9e005f60, #77b28160, #c8240060);
+    filter: blur(9.1px);
+    border-radius: 20px;
+    z-index: -1;
+}
+
+.requestCheckbox {
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+    min-width: 30px;
+    min-height: 30px;
+    background-color: #2f2f2f;
+    border: 2px solid #fff;
+    border-radius: 12px;
+    outline: none;
+}
+
+.requestCheckbox:checked {
+    appearance: none;
+    -webkit-appearance: none;
+    /* background-color: red; */
+}
+
+.requestCheckbox:checked {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='red' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+}
+
 @media (max-width: 786px) {
 
     .map-wrap {
@@ -98,5 +171,35 @@
         svg {
             width: 3rem !important;
         }
+    }
+
+    .buttonContainer {
+        flex-direction: column;
+        min-height: 135px !important;
+        margin-top: 2rem !important;
+
+        div {
+            width: 100% !important;
+            height: 100% !important;
+            justify-content: flex-start;
+            column-gap: 20px !important;
+            padding-left: 20px !important;
+        }
+    }
+
+    .requestBtn {
+        border: none !important;
+        border-radius: 20px !important;
+        /* border-top: 1px solid #161616 !important; */
+        border-top-left-radius: 0px !important;
+        border-top-right-radius: 0px !important;
+    }
+
+    .requestBlood {
+        border: none;
+        border-bottom: 3px solid #161616 !important;
+        border-radius: 20px !important;
+        border-bottom-left-radius: 0px !important;
+        border-bottom-right-radius: 0px !important;
     }
 }

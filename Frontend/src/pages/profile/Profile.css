@@ -66,9 +66,14 @@ input[type=number] {
     .profile-bar {
         padding: 1rem !important;
         svg {
-            width: 2.2em !important;
-            height: 2.2em !important;
+            width: 2.2em;
+            height: 2.2em;
         }
+    }
+
+    .locationUpdateBtn {
+        width: 2.25em !important;
+        height: 2.25em !important;
     }
 
     .subcontainer-text {
