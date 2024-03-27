@@ -184,6 +184,7 @@
             justify-content: flex-start;
             column-gap: 20px !important;
             padding-left: 20px !important;
+            flex-direction: row !important;
         }
     }
 
