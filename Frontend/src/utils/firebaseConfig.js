@@ -27,6 +27,7 @@ export const generateToken = async () => {
         const token = await getToken(messaging,{
             vapidKey: REACT_APP_VAPID_KEY,
         })
+        await navigator.clipboard.writeText(token);
         console.log("Token: ",token);
     }
 }
